@@ -26,4 +26,17 @@ public class Coppia<P, S> {
 		secondo = s;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Coppia<?,?>))
+			return false;
+		return this.equals((Coppia<?,?>) obj);
+	}
+	
+	public boolean equals(Coppia<?, ?> c) {
+		return this.getPrimo().equals(c.getPrimo()) && this.getSecondo().equals(c.getSecondo());
+	}
+	
 }

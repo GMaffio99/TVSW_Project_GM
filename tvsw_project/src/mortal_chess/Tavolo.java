@@ -29,6 +29,7 @@ public class Tavolo {
 	}
 	
 	public void reset() {
+		setPunti(10);
 		listaPedine.clear();
 	}
 	
@@ -188,8 +189,11 @@ public class Tavolo {
 
 			if (cont < 8)
 				return true;
-
+			
+			System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Tutte le celle della colonna " + colonna + " sono occupate");
+			
 			break;
+			
 		}
 
 		case '2': {
@@ -203,7 +207,7 @@ public class Tavolo {
 			}
 
 			if (cont > 0)
-				System.out.println('[' + giocatore + ']' + " MOSSA NON ESEGUIBILE! Nessuna pedina del giocatore " + giocatore + " può essere mossa");
+				System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Nessuna pedina del giocatore " + giocatore + " può essere mossa");
 				
 			break;
 		}
@@ -219,7 +223,7 @@ public class Tavolo {
 			}
 
 			if (cont > 0)
-				System.out.println('[' + giocatore + ']' + " MOSSA NON ESEGUIBILE! Nessuna pedina del giocatore " + giocatore + " può essere unita");
+				System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Nessuna pedina del giocatore " + giocatore + " può essere unita");
 			
 			break;
 		}
@@ -241,9 +245,9 @@ public class Tavolo {
 
 			if (cont > 0) {
 				if (contAttaccanti == 0)
-					System.out.println('[' + giocatore + ']' + " MOSSA NON ESEGUIBILE! Il giocatore " + giocatore + " non ha attaccanti");
+					System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Il giocatore " + giocatore + " non ha attaccanti");
 				else
-					System.out.println('[' + giocatore + ']' + " MOSSA NON ESEGUIBILE! Nessun attaccante del giocatore " + giocatore + " può attaccare");
+					System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Nessun attaccante del giocatore " + giocatore + " può attaccare");
 			}
 
 			break;
@@ -266,9 +270,9 @@ public class Tavolo {
 
 			if (cont > 0) {
 				if (contAttaccanti == 0)
-					System.out.println('[' + giocatore + ']' + " MOSSA NON ESEGUIBILE! Il giocatore " + giocatore + " non ha attaccanti");
+					System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Il giocatore " + giocatore + " non ha attaccanti");
 				else
-					System.out.println('[' + giocatore + ']' + " MOSSA NON ESEGUIBILE! Nessun attaccante del giocatore " + giocatore + " può attaccare");
+					System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Nessun attaccante del giocatore " + giocatore + " può attaccare");
 			}
 
 			break;
@@ -277,7 +281,7 @@ public class Tavolo {
 		}
 
 		if (cont == 0)
-			System.out.println('[' + giocatore + ']' + " MOSSA NON ESEGUIBILE! Il giocatore " + giocatore + " non ha pedine schierate");
+			System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Il giocatore " + giocatore + " non ha pedine schierate");
 
 		return false;
 		
@@ -296,8 +300,8 @@ public class Tavolo {
 		else
 			p = new Difensore(giocatore, charToInt(riga), colonna);
 		listaPedine.put(getIndex(riga, colonna),  p);
-		System.out.println('[' + giocatore + ']' + " LA PEDINA E' STATA POSIZIONATA NELLA CELLA " + colonna + riga);
-		System.out.println('[' + giocatore + ']' + " " + p);
+		System.out.println("[" + giocatore + "]" + " LA PEDINA E' STATA POSIZIONATA NELLA CELLA " + colonna + riga);
+		System.out.println("[" + giocatore + "]" + " " + p);
 	}
 	
 	public ArrayList<Coppia<Integer, Character>> getCelleAdiacenti(char riga, char colonna, boolean ad) {
@@ -358,15 +362,11 @@ public class Tavolo {
 		Pedina p = getPedina(riga1, colonna1);
 		boolean ad = p.isAttaccanteDifensore();
 		ArrayList<Coppia<Integer, Character>> celleAdiacenti = getCelleAdiacenti(riga1, colonna1, ad);
-		for (Coppia<Integer, Character> c: celleAdiacenti) {
-			if (c.getPrimo() == charToInt(riga2) && c.getSecondo() == colonna2) {
-				if (getPedina(c.getPrimo(), c.getSecondo()) == null)
-					return 0;
-				else
-					return 1;
-			}
-		}
-		return -1;
+		if (!celleAdiacenti.contains(new Coppia<Integer, Character>(charToInt(riga2), colonna2)))
+			return -1;
+		if (getPedina(riga2, colonna2) != null)
+			return 1;
+		return 0;
 	}
 	
 	public void muoviPedina(char riga1, char colonna1, char riga2, char colonna2) {
@@ -374,8 +374,8 @@ public class Tavolo {
 		p.muovi(charToInt(riga2), colonna2);
 		listaPedine.remove(getIndex(riga1, colonna1));
 		listaPedine.put(getIndex(riga2, colonna2), p);
-		System.out.println('[' + p.getGiocatore() + ']' + " LA PEDINA E' STATA MOSSA DALLA CELLA " + colonna1 + riga1 + " ALLA CELLA " + colonna2 + riga2);
-		System.out.println('[' + p.getGiocatore() + ']' + " " + p);
+		System.out.println("[" + p.getGiocatore() + "]" + " LA PEDINA E' STATA MOSSA DALLA CELLA " + colonna1 + riga1 + " ALLA CELLA " + colonna2 + riga2);
+		System.out.println("[" + p.getGiocatore() + "]" + " " + p);
 	}
 	
 	public int pedinaUnibile(char giocatore, char riga, char colonna) {
@@ -386,8 +386,10 @@ public class Tavolo {
 			return -1;
 		ArrayList<Coppia<Integer, Character>> celleAdiacenti = getCelleAdiacenti(riga, colonna, true);
 		for (Coppia<Integer, Character> c: celleAdiacenti) {
-			if (getPedina(c.getPrimo(), c.getSecondo()) != null)
+			Pedina p2 = getPedina(c.getPrimo(), c.getSecondo());
+			if (p2 != null && p2.getGiocatore() == p.getGiocatore()) {
 				return 0;
+			}
 		}
 		return 1;
 	}
@@ -396,16 +398,12 @@ public class Tavolo {
 		Pedina p2 = getPedina(riga2, colonna2);
 		if (p2 == null)
 			return 2;
+		if (p2.getGiocatore() != giocatore)
+			return -1;
 		ArrayList<Coppia<Integer, Character>> celleAdiacenti = getCelleAdiacenti(riga1, colonna1, true);
-		for (Coppia<Integer, Character> c: celleAdiacenti) {
-			if (c.getPrimo() == charToInt(riga2) && c.getSecondo() == colonna2) {
-				if (p2.getGiocatore() != giocatore)
-					return -1;
-				else
-					return 0;
-			}
-		}
-		return 1;
+		if (!celleAdiacenti.contains(new Coppia<Integer, Character>(charToInt(riga2), colonna2)))
+			return 1;
+		return 0;
 	}
 	
 	public void unisciPedine(char riga1, char colonna1, char riga2, char colonna2) {
@@ -414,8 +412,8 @@ public class Tavolo {
 		Pedina p = p1.unisci(p2);
 		listaPedine.replace(getIndex(riga1, colonna1), p);
 		listaPedine.remove(getIndex(riga2, colonna2));
-		System.out.println('[' + p.getGiocatore() + ']' + " LE PEDINE NELLE CELLE " + colonna1 + riga1 + " E " + colonna2 + riga2 + " SONO STATE UNITE");
-		System.out.println('[' + p.getGiocatore() + ']' + " " + p);
+		System.out.println("[" + p.getGiocatore() + "]" + " LE PEDINE NELLE CELLE " + colonna1 + riga1 + " E " + colonna2 + riga2 + " SONO STATE UNITE");
+		System.out.println("[" + p.getGiocatore() + "]" + " " + p);
 	}
 	
 	
@@ -423,15 +421,17 @@ public class Tavolo {
 		Pedina p = getPedina(riga, colonna);
 		if (p == null)
 			return 2;
+		if (p.getGiocatore() != giocatore)
+			return -1;
 		if (!p.isAttaccante())
-			return 1;
+			return 3;
 		ArrayList<Coppia<Integer, Character>> celleAdiacenti = getCelleAdiacenti(riga, colonna, true);
 		for (Coppia<Integer, Character> c: celleAdiacenti) {
 			Pedina p2 = getPedina(c.getPrimo(), c.getSecondo());
-			if (p2 != null && p.getGiocatore() != giocatore)
+			if (p2 != null && p2.getGiocatore() != giocatore)
 				return 0;
 		}
-		return -1;
+		return 1;
 	}
 	
 	public int pedinaAttaccabile(char giocatore, char riga1, char colonna1, char riga2, char colonna2) {
@@ -439,50 +439,48 @@ public class Tavolo {
 		if (p == null)
 			return 2;
 		if (p.getGiocatore() == giocatore)
-			return 1;
+			return -1;
 		ArrayList<Coppia<Integer, Character>> celleAdiacenti = getCelleAdiacenti(riga1, colonna1, true);
-		for (Coppia<Integer, Character> c: celleAdiacenti) {
-			if (c.getPrimo() == charToInt(riga2) && c.getSecondo() == colonna2)
-				return 0;
-		}
-		return -1;
+		if (!celleAdiacenti.contains(new Coppia<Integer, Character>(charToInt(riga2), colonna2)))
+			return 1;
+		return 0;
 	}
 	
 	public void attaccaPedina(char riga1, char colonna1, char riga2, char colonna2) {
 		Pedina p1 = getPedina(riga1, colonna1);
 		Pedina p2 = getPedina(riga2, colonna2);
-		System.out.println('[' + p1.getGiocatore() + ']' + " LA PEDINA NELLA CELLA " + colonna1 + riga1 + " ATTACCA LA PEDINA NELLA CELLA " + colonna2 + riga2);
+		System.out.println("[" + p1.getGiocatore() + "]" + " LA PEDINA NELLA CELLA " + colonna1 + riga1 + " ATTACCA LA PEDINA NELLA CELLA " + colonna2 + riga2);
 		if (p1.isAttaccanteDifensore()) {
 			AttaccanteDifensore ad = (AttaccanteDifensore) p1;
 			if (p2.vieneAttaccata(ad.getPuntiAttacco())) {
 				listaPedine.remove(getIndex(riga2, colonna2));
-				System.out.println('[' + ad.getGiocatore() + ']' + " LA PEDINA ATTACCATA HA ESAURITO I SUOI PUNTI DIFESA, VIENE RIMOSSA DAL TAVOLO");
+				System.out.println("[" + ad.getGiocatore() + "]" + " LA PEDINA ATTACCATA HA ESAURITO I SUOI PUNTI DIFESA, VIENE RIMOSSA DAL TAVOLO");
 			}
 			else
-				System.out.println('[' + ad.getGiocatore() + ']' + " " + p2);
+				System.out.println("[" + ad.getGiocatore() + "]" + " " + p2);
 			if (ad.attacca()) {
 				Pedina d = new Difensore(ad.getGiocatore(), ad.getRiga(), ad.getColonna(), ad.getPuntiDifesa());
 				listaPedine.replace(getIndex(riga1, colonna1), d);
-				System.out.println('[' + d.getGiocatore() + ']' + " LA PEDINA ATTACCANTE-DIFENSORE HA ESAURITO I SUOI PUNTI ATTACCO, VIENE TRASFORMATA IN UNA PEDINA DIFENSORE");
-				System.out.println('[' + d.getGiocatore() + ']' + " " + d);
+				System.out.println("[" + d.getGiocatore() + "]" + " LA PEDINA ATTACCANTE-DIFENSORE HA ESAURITO I SUOI PUNTI ATTACCO, VIENE TRASFORMATA IN UNA PEDINA DIFENSORE");
+				System.out.println("[" + d.getGiocatore() + "]" + " " + d);
 			}
 			else
-				System.out.println('[' + ad.getGiocatore() + ']' + " " + ad);
+				System.out.println("[" + ad.getGiocatore() + "]" + " " + ad);
 		}
 		else {
 			Attaccante a = (Attaccante) p1;
 			if (p2.vieneAttaccata(a.getPuntiAttacco())) {
 				listaPedine.remove(getIndex(riga2, colonna2));
-				System.out.println('[' + a.getGiocatore() + ']' + " LA PEDINA ATTACCATA HA ESAURITO I SUOI PUNTI DIFESA, VIENE RIMOSSA DAL TAVOLO");
+				System.out.println("[" + a.getGiocatore() + "]" + " LA PEDINA ATTACCATA HA ESAURITO I SUOI PUNTI DIFESA, VIENE RIMOSSA DAL TAVOLO");
 			}
 			else
-				System.out.println('[' + a.getGiocatore() + ']' + " " + p2);
+				System.out.println("[" + a.getGiocatore() + "]" + " " + p2);
 			if (a.attacca()) {
 				listaPedine.remove(getIndex(riga1, colonna1));
-				System.out.println('[' + a.getGiocatore() + ']' + " LA PEDINA ATTACCANTE HA ESAURITO I SUOI PUNTI ATTACCO, VIENE RIMOSSA DAL TAVOLO");
+				System.out.println("[" + a.getGiocatore() + "]" + " LA PEDINA ATTACCANTE HA ESAURITO I SUOI PUNTI ATTACCO, VIENE RIMOSSA DAL TAVOLO");
 			}
 			else
-				System.out.println('[' + a.getGiocatore() + ']' + " " + a);
+				System.out.println("[" + a.getGiocatore() + "]" + " " + a);
 		}
 	}
 	
@@ -492,11 +490,11 @@ public class Tavolo {
 		if (p == null)
 			return 2;
 		if (p.getGiocatore() != giocatore)
-			return 1;
-		if (!p.isAttaccante())
 			return -1;
-		if ((giocatore == 'X' && p.getColonna() != 'H') || (giocatore == 'O' && p.getColonna() != 'A'))
-			return -2;
+		if (!p.isAttaccante())
+			return 3;
+		if ((giocatore == 'X' && colonna != 'H') || (giocatore == 'O' && colonna != 'A'))
+			return 1;
 		return 0;
 	}
 
@@ -508,21 +506,21 @@ public class Tavolo {
 			if (ad.attacca()) {
 				Pedina d = new Difensore(ad.getGiocatore(), ad.getRiga(), ad.getColonna(), ad.getPuntiDifesa());
 				listaPedine.replace(getIndex(riga, colonna), d);
-				System.out.println('[' + ad.getGiocatore() + ']' + " LA PEDINA ATTACCANTE-DIFENSORE HA ESAURITO I SUOI PUNTI ATTACCO, VIENE TRASFORMATA IN UNA PEDINA DIFENSORE");
-				System.out.println('[' + ad.getGiocatore() + ']' + " " + d);
+				System.out.println("[" + ad.getGiocatore() + "]" + " LA PEDINA ATTACCANTE-DIFENSORE HA ESAURITO I SUOI PUNTI ATTACCO, VIENE TRASFORMATA IN UNA PEDINA DIFENSORE");
+				System.out.println("[" + ad.getGiocatore() + "]" + " " + d);
 			}
 			else
-				System.out.println('[' + ad.getGiocatore() + ']' + " " + ad);
+				System.out.println("[" + ad.getGiocatore() + "]" + " " + ad);
 		}
 		else {
 			Attaccante a = (Attaccante) p;
 			diminuisciPuntiGiocatore(giocatore, a.getPuntiAttacco());
 			if (a.attacca()) {
 				listaPedine.remove(getIndex(riga, colonna));
-				System.out.println('[' + a.getGiocatore() + ']' + " LA PEDINA ATTACCANTE HA ESAURITO I SUOI PUNTI ATTACCO, VIENE RIMOSSA DAL TAVOLO");
+				System.out.println("[" + a.getGiocatore() + "]" + " LA PEDINA ATTACCANTE HA ESAURITO I SUOI PUNTI ATTACCO, VIENE RIMOSSA DAL TAVOLO");
 			}
 			else
-				System.out.println('[' + a.getGiocatore() + ']' + " " + a);
+				System.out.println("[" + a.getGiocatore() + "]" + " " + a);
 		}
 	}
 	
