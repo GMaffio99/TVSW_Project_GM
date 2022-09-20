@@ -2,9 +2,17 @@ package mortal_chess;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class Partita {
+	
+	private BufferedReader reader;
+	private Tavolo tavolo;
+	
+	public Partita(BufferedReader reader, Tavolo tavolo) {
+		this.reader = reader;
+		this.tavolo = tavolo;
+	}
+	
 
 	/*@ requires intestazione != null &&
 	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
@@ -13,7 +21,6 @@ public class Partita {
 	  @ 		\result.charAt(1) >= '1' && \result.charAt(1) <= '8';
 	  @*/
 	public String selezioneCella(String intestazione) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		String cella;
 		boolean esito;
 		do {
@@ -33,8 +40,9 @@ public class Partita {
 		return cella;
 	}
 
+	
 	//@ requires s != null && s.length() > 0;
-	public boolean isNumber(String s) { 
+	public boolean isInteger(String s) { 
 		try {  
 			Integer.parseInt(s);  
 			return true;
@@ -43,8 +51,7 @@ public class Partita {
 		}
 	}
 	
-	
-	public void impostaPunti(BufferedReader reader, Tavolo tavolo) throws IOException {
+	public void impostaPunti() throws IOException {
 		
 		String entry;
 		int punti = 0;
@@ -52,7 +59,7 @@ public class Partita {
 		do {
 			System.out.println("~~~ SCEGLIETE I PUNTI VITA DEI GIOCATORI: ~~~");
 			entry = reader.readLine();
-			if (!isNumber(entry))
+			if (!isInteger(entry))
 				System.out.println("~~~ SCELTA NON VALIDA, INSERITE UN NUMERO INTERO ~~~");
 			else {
 				punti = Integer.parseInt(entry);
@@ -72,7 +79,7 @@ public class Partita {
 	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
 	  @ ensures \result >= '1' && \result <= '5';
 	  @*/
-	public char selezionaMossa(BufferedReader reader, Tavolo tavolo, char giocatore, String intestazione) throws IOException {
+	public char selezionaMossa(char giocatore, String intestazione) throws IOException {
 		
 		String entry;
 		char mossa;
@@ -102,7 +109,7 @@ public class Partita {
 	  @ requires intestazione != null &&
 	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
 	  @*/
-	public void posizionarePedina(BufferedReader reader, Tavolo tavolo, char giocatore, String intestazione) throws IOException {
+	public void posizionarePedina(char giocatore, String intestazione) throws IOException {
 		
 		String entry;
 		String cella;
@@ -146,7 +153,7 @@ public class Partita {
 	  @ requires intestazione != null &&
 	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
 	  @*/
-	public void muoverePedina(Tavolo tavolo, char giocatore, String intestazione) throws IOException {
+	public void muoverePedina(char giocatore, String intestazione) throws IOException {
 		
 		String cella;
 		int esito;
@@ -188,7 +195,7 @@ public class Partita {
 	  @ requires intestazione != null &&
 	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
 	  @*/
-	public void unirePedine(Tavolo tavolo, char giocatore, String intestazione) throws IOException {
+	public void unirePedine(char giocatore, String intestazione) throws IOException {
 		
 		String cella;
 		int esito;
@@ -232,7 +239,7 @@ public class Partita {
 	  @ requires intestazione != null &&
 	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
 	  @*/
-	public void attaccarePedina(Tavolo tavolo, char giocatore, String intestazione) throws IOException {
+	public void attaccarePedina(char giocatore, String intestazione) throws IOException {
 		
 		String cella;
 		int esito;
@@ -265,7 +272,7 @@ public class Partita {
 			if (esito == -1)
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna2 + riga2 + " NON APPARTIENE ALL'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
 			else if (esito == 1)
-				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna2 + riga2 + " NON NON E' ATTACCABILE DALLA PEDINA NELLA CELLA " + colonna1 + riga1 + ", SELEZIONA UN'ALTRA PEDINA");
+				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna2 + riga2 + " NON E' ATTACCABILE DALLA PEDINA NELLA CELLA " + colonna1 + riga1 + ", SELEZIONA UN'ALTRA PEDINA");
 			else if (esito == 2)
 				System.out.println(intestazione + " NELLA CELLA " + colonna2 + riga2 + " NON E' PRESENTE UNA PEDINA, SELEZIONA UN'ALTRA CELLA");
 		} while (esito != 0);
@@ -278,7 +285,7 @@ public class Partita {
 	  @ requires intestazione != null &&
 	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
 	  @*/
-	public void attaccareAvversario(Tavolo tavolo, char giocatore, String intestazione) throws IOException {
+	public void attaccareAvversario(char giocatore, String intestazione) throws IOException {
 		
 		String cella;
 		int esito;
@@ -316,10 +323,8 @@ public class Partita {
 		System.out.println("~~~ BENVENUTI IN MORTAL CHESS! ~~~");
 		System.out.println();
 		
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		String entry;
 		char nuovaPartita;
-		Tavolo tavolo = Tavolo.getTavolo();
 		
 		do {
 			
@@ -327,7 +332,7 @@ public class Partita {
 			System.out.println();
 			
 			tavolo.reset();
-			impostaPunti(reader, tavolo);
+			impostaPunti();
 
 			System.out.println();
 			System.out.println("~~~ LA PARTITA HA INIZIO! ~~~");
@@ -355,23 +360,23 @@ public class Partita {
 				System.out.println();
 
 				// scelta mossa
-				mossa = selezionaMossa(reader, tavolo, giocatore, intestazione);
+				mossa = selezionaMossa(giocatore, intestazione);
 				
 				switch(mossa) {
 					case '1': // posizionare una pedina
-						posizionarePedina(reader, tavolo, giocatore, intestazione);
+						posizionarePedina(giocatore, intestazione);
 						break;
 					case '2': // muovere una pedina
-						muoverePedina(tavolo, giocatore, intestazione);
+						muoverePedina(giocatore, intestazione);
 						break;
 					case '3': // unire due pedine
-						unirePedine(tavolo, giocatore, intestazione);
+						unirePedine(giocatore, intestazione);
 						break;
 					case '4': // attaccare una pedina
-						attaccarePedina(tavolo, giocatore, intestazione);
+						attaccarePedina(giocatore, intestazione);
 						break;
 					case '5': // attaccare l'avversario
-						attaccareAvversario(tavolo, giocatore, intestazione);
+						attaccareAvversario(giocatore, intestazione);
 						break;
 				}
 
