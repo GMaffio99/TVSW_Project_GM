@@ -6,6 +6,12 @@ import java.io.InputStreamReader;
 
 public class Partita {
 
+	/*@ requires intestazione != null &&
+	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
+	  @ ensures \result.length() == 2 &&
+	  @ 		\result.charAt(0) >= 'A' && \result.charAt(0) <= 'H' &&
+	  @ 		\result.charAt(1) >= '1' && \result.charAt(1) <= '8';
+	  @*/
 	public String selezioneCella(String intestazione) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		String cella;
@@ -27,28 +33,45 @@ public class Partita {
 		return cella;
 	}
 
+	//@ requires s != null && s.length() > 0;
 	public boolean isNumber(String s) { 
 		try {  
-			Double.parseDouble(s);  
+			Integer.parseInt(s);  
 			return true;
 		} catch(NumberFormatException e){  
 			return false;  
 		}
 	}
 	
+	
 	public void impostaPunti(BufferedReader reader, Tavolo tavolo) throws IOException {
+		
 		String entry;
+		int punti = 0;
+		
 		do {
 			System.out.println("~~~ SCEGLIETE I PUNTI VITA DEI GIOCATORI: ~~~");
 			entry = reader.readLine();
 			if (!isNumber(entry))
 				System.out.println("~~~ SCELTA NON VALIDA, INSERITE UN NUMERO INTERO ~~~");
-		} while (!isNumber(entry));
+			else {
+				punti = Integer.parseInt(entry);
+				if (punti <= 0)
+					System.out.println("~~~ SCELTA NON VALIDA, INSERITE UN NUMERO POSITIVO ~~~");
+				else
+					break;
+			}
+		} while (true);
 		
-		int punti = Integer.parseInt(entry);
 		tavolo.setPunti(punti);
+		
 	}
 	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires intestazione != null &&
+	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
+	  @ ensures \result >= '1' && \result <= '5';
+	  @*/
 	public char selezionaMossa(BufferedReader reader, Tavolo tavolo, char giocatore, String intestazione) throws IOException {
 		
 		String entry;
@@ -75,6 +98,10 @@ public class Partita {
 		
 	}
 
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires intestazione != null &&
+	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
+	  @*/
 	public void posizionarePedina(BufferedReader reader, Tavolo tavolo, char giocatore, String intestazione) throws IOException {
 		
 		String entry;
@@ -115,6 +142,10 @@ public class Partita {
 		
 	}
 	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires intestazione != null &&
+	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
+	  @*/
 	public void muoverePedina(Tavolo tavolo, char giocatore, String intestazione) throws IOException {
 		
 		String cella;
@@ -153,6 +184,10 @@ public class Partita {
 		
 	}
 	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires intestazione != null &&
+	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
+	  @*/
 	public void unirePedine(Tavolo tavolo, char giocatore, String intestazione) throws IOException {
 		
 		String cella;
@@ -193,6 +228,10 @@ public class Partita {
 		
 	}
 	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires intestazione != null &&
+	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
+	  @*/
 	public void attaccarePedina(Tavolo tavolo, char giocatore, String intestazione) throws IOException {
 		
 		String cella;
@@ -235,6 +274,10 @@ public class Partita {
 		
 	}
 	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires intestazione != null &&
+	  @ 		(intestazione.equals(new String("[X]")) || intestazione.equals(new String("[O]")));
+	  @*/
 	public void attaccareAvversario(Tavolo tavolo, char giocatore, String intestazione) throws IOException {
 		
 		String cella;

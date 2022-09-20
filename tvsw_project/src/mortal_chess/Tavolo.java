@@ -6,61 +6,84 @@ import java.util.HashMap;
 
 public class Tavolo {
 	
-	private static Tavolo tavolo;
+	private /*@ spec_public @*/ static Tavolo tavolo;
 	
-	private int puntiGiocatoreX;
-	private int puntiGiocatoreO;
-	private HashMap<Integer, Pedina> listaPedine;
+	private /*@ spec_public @*/ int puntiGiocatoreX;
+	private /*@ spec_public @*/ int puntiGiocatoreO;
+	private /*@ spec_public @*/ HashMap<Integer, Pedina> listaPedine;
 
-	
+	//@ ensures this.puntiGiocatoreX == 10 && this.puntiGiocatoreO == 10;
+	//@ ensures listaPedine.isEmpty();
 	private Tavolo() {
 		puntiGiocatoreX = puntiGiocatoreO = 10;
-		listaPedine = new HashMap<>();
+		listaPedine = new HashMap<Integer, Pedina>();
 	}
 	
+	//@ ensures \result != null && \result == Tavolo.tavolo;
 	public static Tavolo getTavolo() {
 		if (tavolo == null)
 			tavolo = new Tavolo();
 		return tavolo;
 	}
 	
+	//@ ensures \result == this.listaPedine;
 	public HashMap<Integer, Pedina> getListaPedine() {
 		return listaPedine;
 	}
 	
+	//@ ensures this.puntiGiocatoreX == 10 && this.puntiGiocatoreO == 10;
+	//@ ensures this.listaPedine.isEmpty();
 	public void reset() {
 		setPunti(10);
 		listaPedine.clear();
 	}
 	
+	//@ ensures this.puntiGiocatoreX == p;
 	public void setPuntiGiocatoreX(int p) {
 		puntiGiocatoreX = p;
 	}
 	
+	//@ ensures this.puntiGiocatoreO == p;
 	public void setPuntiGiocatoreO(int p) {
 		puntiGiocatoreO = p;
 	}
 	
+	//@ ensures this.puntiGiocatoreX == p && this.puntiGiocatoreO == p;
 	public void setPunti(int p) {
 		setPuntiGiocatoreX(p);
 		setPuntiGiocatoreO(p);
 	}
 	
+	//@ ensures \result == this.puntiGiocatoreX;
 	public int getPuntiGiocatoreX() {
 		return puntiGiocatoreX;
 	}
 	
+	//@ ensures \result == this.puntiGiocatoreO;
 	public int getPuntiGiocatoreO() {
 		return puntiGiocatoreO;
 	}
 	
+	//@ public invariant puntiGiocatoreX <= 0 ==> puntiGiocatoreO > 0;
+	//@ public invariant puntiGiocatoreO <= 0 ==> puntiGiocatoreX > 0;
+	
+	//@ ensures \result == true <==> (this.puntiGiocatoreX <= 0 || this.puntiGiocatoreO <= 0);
+	//@ ensures \result == false <==> (this.puntiGiocatoreX > 0 && this.puntiGiocatoreO > 0);
 	public boolean partitaFinita() {
 		return puntiGiocatoreX <= 0 || puntiGiocatoreO <= 0;
 	}
 	
+	//@ ensures \result == 'O' <== this.puntiGiocatoreX <= 0;
+	//@ ensures \result == 'X' <== this.puntiGiocatoreO <= 0;
+	//@ ensures \result == '-' <== (this.puntiGiocatoreX > 0 && this.puntiGiocatoreO > 0);
 	public char getVincitore() {
-		return puntiGiocatoreX <= 0 ? 'O' : 'X';
+		if (puntiGiocatoreX <= 0)
+			return 'O';
+		if (puntiGiocatoreO <= 0)
+			return 'X';
+		return '-';
 	}
+	
 	
 	public void print() {
 		
@@ -109,6 +132,16 @@ public class Tavolo {
 	}
 	
 	
+	/*@ requires c >= '1' && c <= '8';
+	  @ ensures \result == 1 <==> c == '1';
+	  @ ensures \result == 2 <==> c == '2';
+	  @ ensures \result == 3 <==> c == '3';
+	  @ ensures \result == 4 <==> c == '4';
+	  @ ensures \result == 5 <==> c == '5';
+	  @ ensures \result == 6 <==> c == '6';
+	  @ ensures \result == 7 <==> c == '7';
+	  @ ensures \result == 8 <==> c == '8';
+	  @*/
 	public int charToInt(char c) {
 		switch (c) {
 			case '1': return 1; 
@@ -123,6 +156,16 @@ public class Tavolo {
 		}
 	}
 	
+	/*@ requires i >= 1 && i <= 8;
+	  @ ensures \result == '1' <==> i == 1;
+	  @ ensures \result == '2' <==> i == 2;
+	  @ ensures \result == '3' <==> i == 3;
+	  @ ensures \result == '4' <==> i == 4;
+	  @ ensures \result == '5' <==> i == 5;
+	  @ ensures \result == '6' <==> i == 6;
+	  @ ensures \result == '7' <==> i == 7;
+	  @ ensures \result == '8' <==> i == 8;
+	  @*/
 	public char intToChar(int i) {
 		switch(i) {
 			case 1: return '1'; 
@@ -137,10 +180,23 @@ public class Tavolo {
 		}
 	}
 	
+	//@ pure
 	public int getIndex(char riga, char colonna) {
 		return getIndex(charToInt(riga), colonna);
 	}
 	
+	/*@ requires riga >= 1 && riga <= 8;
+	  @ requires colonna >= 'A' && colonna <= 'H';
+	  @ ensures \result == (8 * (riga-1) + 0) <==> colonna == 'A';
+	  @ ensures \result == (8 * (riga-1) + 1) <==> colonna == 'B';
+	  @ ensures \result == (8 * (riga-1) + 2) <==> colonna == 'C';
+	  @ ensures \result == (8 * (riga-1) + 3) <==> colonna == 'D';
+	  @ ensures \result == (8 * (riga-1) + 4) <==> colonna == 'E';
+	  @ ensures \result == (8 * (riga-1) + 5) <==> colonna == 'F';
+	  @ ensures \result == (8 * (riga-1) + 6) <==> colonna == 'G';
+	  @ ensures \result == (8 * (riga-1) + 7) <==> colonna == 'H';
+	  @ pure
+	  @*/
 	public int getIndex(int riga, char colonna) {
 		int col;
 		switch (colonna) {
@@ -157,10 +213,17 @@ public class Tavolo {
 		return 8 * (riga-1) + col;
 	}
 	
+	//@ pure
 	public Pedina getPedina(char riga, char colonna) {
 		return getPedina(charToInt(riga), colonna);
 	}
 	
+	/*@ requires riga >= 1 && riga <= 8;
+	  @ requires colonna >= 'A' && colonna <= 'H';
+	  @ ensures \result != null <==> this.listaPedine.containsKey(getIndex(riga,colonna));
+	  @ ensures \result == null <==> !this.listaPedine.containsKey(getIndex(riga,colonna));
+	  @ pure
+	  @*/
 	public Pedina getPedina(int riga, char colonna) {
 		Pedina p = listaPedine.get(getIndex(riga, colonna));
 		if (p == null)
@@ -168,7 +231,9 @@ public class Tavolo {
 		return p;
 	}
 	
-	
+	/*@ requires mossa >= '1' && mossa <= '5';
+	  @ requires giocatore == 'X' || giocatore == 'O';
+	  @*/
 	public boolean mossaEseguibile(char mossa, char giocatore) {
 		
 		if (mossa != '1' && mossa != '2' && mossa != '3' && mossa != '4' && mossa != '5')
@@ -287,12 +352,17 @@ public class Tavolo {
 		
 	}
 	
-	
+	//@ ensures \result == true <==> getPedina(riga,colonna) != null;
 	public boolean cellaOccupata(char riga, char colonna) {
 		return getPedina(riga, colonna) != null;
 	}
 	
-	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires tipologia == 'A' || tipologia == 'D';
+	  @ requires riga >= 1 && riga <= 8;
+	  @ requires colonna >= 'A' && colonna <= 'H';
+	  @ ensures listaPedine.containsKey(getIndex(riga, colonna));
+	  @*/
 	public void posizionaPedina(char giocatore, char tipologia, char riga, char colonna) {
 		Pedina p;
 		if (tipologia == 'A')
@@ -304,9 +374,13 @@ public class Tavolo {
 		System.out.println("[" + giocatore + "]" + " " + p);
 	}
 	
+	/*@ requires riga >= 1 && riga <= 8;
+	  @ requires colonna >= 'A' && colonna <= 'H';
+	  @ ensures \result != null && !(\result.isEmpty());
+	  @*/
 	public ArrayList<Coppia<Integer, Character>> getCelleAdiacenti(char riga, char colonna, boolean ad) {
 		int r = charToInt(riga);
-		ArrayList<Coppia<Integer, Character>> result = new ArrayList<>();
+		ArrayList<Coppia<Integer, Character>> result = new ArrayList<Coppia<Integer, Character>>();
 		if (colonna != 'A') {
 			char letteraPrecedente = 'x';
 			switch (colonna) {
@@ -342,7 +416,13 @@ public class Tavolo {
 		return result;
 	}
 	
-	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires riga >= 1 && riga <= 8;
+	  @ requires colonna >= 'A' && colonna <= 'H';
+	  @ ensures \result >= -1 && \result <= 2;
+	  @ ensures \result == 2 ==> getPedina(riga,colonna) == null;
+	  @ ensures \result == -1 ==> getPedina(riga,colonna).getGiocatore() != giocatore;
+	  @*/
 	public int pedinaMovibile(char giocatore, char riga, char colonna) {
 		Pedina p = getPedina(riga, colonna);
 		if (p == null)
@@ -358,6 +438,13 @@ public class Tavolo {
 		return 1;
 	}
 	
+	/*@ requires riga1 >= 1 && riga1 <= 8;
+	  @ requires colonna1 >= 'A' && colonna1 <= 'H';
+	  @ requires riga2 >= 1 && riga2 <= 8;
+	  @ requires colonna2 >= 'A' && colonna2 <= 'H';
+	  @ requires riga1 != riga2 || colonna1 != colonna2;
+	  @ ensures \result >= -1 && \result <= 1;
+	  @*/
 	public int cellaRaggiungibile(char riga1, char colonna1, char riga2, char colonna2) {
 		Pedina p = getPedina(riga1, colonna1);
 		boolean ad = p.isAttaccanteDifensore();
@@ -369,6 +456,14 @@ public class Tavolo {
 		return 0;
 	}
 	
+	/*@ requires riga1 >= 1 && riga1 <= 8;
+	  @ requires colonna1 >= 'A' && colonna1 <= 'H';
+	  @ requires riga2 >= 1 && riga2 <= 8;
+	  @ requires colonna2 >= 'A' && colonna2 <= 'H';
+	  @ requires riga1 != riga2 || colonna1 != colonna2;
+	  @ ensures listaPedine.get(getIndex(riga1, colonna1)) == null &&
+	  @ 		listaPedine.get(getIndex(riga2, colonna2)) != null;
+	  @*/
 	public void muoviPedina(char riga1, char colonna1, char riga2, char colonna2) {
 		Pedina p = getPedina(riga1, colonna1);
 		p.muovi(charToInt(riga2), colonna2);
@@ -378,6 +473,14 @@ public class Tavolo {
 		System.out.println("[" + p.getGiocatore() + "]" + " " + p);
 	}
 	
+	
+	/*@ requires giocatore == 'X' && giocatore == 'O';
+	  @ requires riga >= 1 && riga <= 8;
+	  @ requires colonna >= 'A' && colonna <= 'H';
+	  @ ensures \result >= -1 && \result <= 2;
+	  @ ensures \result == 2 ==> getPedina(riga,colonna) == null;
+	  @ ensures \result == -1 ==> getPedina(riga,colonna).getGiocatore() != giocatore;
+	  @*/
 	public int pedinaUnibile(char giocatore, char riga, char colonna) {
 		Pedina p = getPedina(riga, colonna);
 		if (p == null)
@@ -394,6 +497,16 @@ public class Tavolo {
 		return 1;
 	}
 	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires riga1 >= 1 && riga1 <= 8;
+	  @ requires colonna1 >= 'A' && colonna1 <= 'H';
+	  @ requires riga2 >= 1 && riga2 <= 8;
+	  @ requires colonna2 >= 'A' && colonna2 <= 'H';
+	  @ requires riga1 != riga2 || colonna1 != colonna2;
+	  @ ensures \result >= -1 && \result <= 2;
+	  @ ensures \result == 2 ==> getPedina(riga2,colonna2) == null;
+	  @ ensures \result == -1 ==> getPedina(riga2,colonna2).getGiocatore() != giocatore;
+	  @*/
 	public int pedineUnibili(char giocatore, char riga1, char colonna1, char riga2, char colonna2) {
 		Pedina p2 = getPedina(riga2, colonna2);
 		if (p2 == null)
@@ -406,6 +519,14 @@ public class Tavolo {
 		return 0;
 	}
 	
+	/*@ requires riga1 >= 1 && riga1 <= 8;
+	  @ requires colonna1 >= 'A' && colonna1 <= 'H';
+	  @ requires riga2 >= 1 && riga2 <= 8;
+	  @ requires colonna2 >= 'A' && colonna2 <= 'H';
+	  @ requires riga1 != riga2 || colonna1 != colonna2;
+	  @ ensures listaPedine.get(getIndex(riga1, colonna1)).equals(\old(listaPedine.get(getIndex(riga1, colonna1))));
+	  @ ensures listaPedine.get(getIndex(riga2, colonna2)) == null;
+	  @*/
 	public void unisciPedine(char riga1, char colonna1, char riga2, char colonna2) {
 		Pedina p1 = getPedina(riga1, colonna1);
 		Pedina p2 = getPedina(riga2, colonna2);
@@ -416,7 +537,14 @@ public class Tavolo {
 		System.out.println("[" + p.getGiocatore() + "]" + " " + p);
 	}
 	
-	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires riga >= 1 && riga <= 8;
+	  @ requires colonna >= 'A' && colonna <= 'H';
+	  @ ensures \result >= -1 && \result <= 3;
+	  @ ensures \result == 2 ==> getPedina(riga,colonna) == null;
+	  @ ensures \result == -1 ==> getPedina(riga,colonna).getGiocatore() != giocatore;
+	  @ ensures \result == 3 ==> !getPedina(riga,colonna).isAttaccante();
+	  @*/
 	public int pedinaAttaccante(char giocatore, char riga, char colonna) {
 		Pedina p = getPedina(riga, colonna);
 		if (p == null)
@@ -434,6 +562,16 @@ public class Tavolo {
 		return 1;
 	}
 	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires riga1 >= 1 && riga1 <= 8;
+	  @ requires colonna1 >= 'A' && colonna1 <= 'H';
+	  @ requires riga2 >= 1 && riga2 <= 8;
+	  @ requires colonna2 >= 'A' && colonna2 <= 'H';
+	  @ requires riga1 != riga2 || colonna1 != colonna2;
+	  @ ensures \result >= -1 && \result <= 2;
+	  @ ensures \result == 2 ==> getPedina(riga2,colonna2) == null;
+	  @ ensures \result == -1 ==> getPedina(riga2,colonna2).getGiocatore() == giocatore;
+	  @*/
 	public int pedinaAttaccabile(char giocatore, char riga1, char colonna1, char riga2, char colonna2) {
 		Pedina p = getPedina(riga2, colonna2);
 		if (p == null)
@@ -446,6 +584,12 @@ public class Tavolo {
 		return 0;
 	}
 	
+	/*@ requires riga1 >= 1 && riga1 <= 8;
+	  @ requires colonna1 >= 'A' && colonna1 <= 'H';
+	  @ requires riga2 >= 1 && riga2 <= 8;
+	  @ requires colonna2 >= 'A' && colonna2 <= 'H';
+	  @ requires riga1 != riga2 || colonna1 != colonna2;
+	  @*/
 	public void attaccaPedina(char riga1, char colonna1, char riga2, char colonna2) {
 		Pedina p1 = getPedina(riga1, colonna1);
 		Pedina p2 = getPedina(riga2, colonna2);
@@ -484,7 +628,14 @@ public class Tavolo {
 		}
 	}
 	
-	
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires riga >= 1 && riga <= 8;
+	  @ requires colonna >= 'A' && colonna <= 'H';
+	  @ ensures \result >= -1 && \result <= 3;
+	  @ ensures \result == 2 ==> getPedina(riga,colonna) == null;
+	  @ ensures \result == -1 ==> getPedina(riga,colonna).getGiocatore() != giocatore;
+	  @ ensures \result == 3 ==> !getPedina(riga, colonna).isAttaccante();
+	  @*/
 	public int pedinaAttaccanteAvversario(char giocatore, char riga, char colonna) {
 		Pedina p = getPedina(riga, colonna);
 		if (p == null)
@@ -498,6 +649,10 @@ public class Tavolo {
 		return 0;
 	}
 
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires riga >= 1 && riga <= 8;
+	  @ requires colonna >= 'A' && colonna <= 'H';
+	  @*/
 	public void attaccaAvversario(char giocatore, char riga, char colonna) {
 		Pedina p = getPedina(riga, colonna);
 		if (p.isAttaccanteDifensore()) {
@@ -524,7 +679,11 @@ public class Tavolo {
 		}
 	}
 	
-
+	/*@ requires giocatore == 'X' || giocatore == 'O';
+	  @ requires punti >= 1;
+	  @ ensures giocatore == 'X' ==> puntiGiocatoreO == \old(puntiGiocatoreO) - punti;
+	  @ ensures giocatore == 'O' ==> puntiGiocatoreX == \old(puntiGiocatoreX) - punti;
+	  @ @*/
 	public void diminuisciPuntiGiocatore(char giocatore, int punti) {
 		if (giocatore == 'X')
 			setPuntiGiocatoreO(getPuntiGiocatoreO() - punti);
