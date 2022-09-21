@@ -128,17 +128,129 @@ public class TavoloTest {
 	}
 
 	@Test
-	public void testMossaEseguibile() {
+	public void testMossaEseguibileMCDC() {
+		
+//	1	if (mossa != '1' && mossa != '2' && mossa != '3' && mossa != '4' && mossa != '5')
+//			return false;
+//		int cont = 0;
+//		switch (mossa) {
+//
+//		case '1': {
+//			char colonna = giocatore == 'X' ? 'A' : 'H';
+//			for (Pedina p: listaPedine.values()) {
+//	2			if (p.getGiocatore() == giocatore && p.getColonna() == colonna)
+//					cont++;
+//			}
+//	3		if (cont < 8)
+//				return true;
+//			System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Tutte le celle della colonna " + colonna + " sono occupate");
+//			break;
+//		}
+//
+//		case '2': {
+//			for (Pedina p: listaPedine.values()) {
+//	4			if (p.getGiocatore() == giocatore) {
+//					cont++;
+//	5				if (pedinaMovibile(giocatore, intToChar(p.getRiga()), p.getColonna()) == 0)
+//						return true;
+//				}
+//			}
+//	6		if (cont > 0)
+//				System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Nessuna pedina del giocatore " + giocatore + " può essere mossa");	
+//			break;
+//		}
+//
+//		case '3': {
+//			for (Pedina p: listaPedine.values()) {
+//	7			if (p.getGiocatore() == giocatore) {
+//					cont++;
+//	8				if (pedinaUnibile(giocatore, intToChar(p.getRiga()), p.getColonna()) == 0)
+//						return true;
+//				}
+//			}
+//	9		if (cont > 0)
+//				System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Nessuna pedina del giocatore " + giocatore + " può essere unita");
+//			break;
+//		}
+//
+//		case '4': {
+//			int contAttaccanti = 0;
+//			for (Pedina p: listaPedine.values()) {
+//	10			if (p.getGiocatore() == giocatore) {
+//					cont++;
+//	11				if (p.isAttaccante()) {
+//						contAttaccanti++;
+//	12					if (pedinaAttaccante(giocatore, intToChar(p.getRiga()), p.getColonna()) == 0)
+//							return true;
+//					}
+//				}
+//			}
+//	13		if (cont > 0) {
+//	14			if (contAttaccanti == 0)
+//					System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Il giocatore " + giocatore + " non ha attaccanti");
+//				else
+//					System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Nessun attaccante del giocatore " + giocatore + " può attaccare");
+//			}
+//			break;
+//		}
+//
+//		case '5': {
+//			int contAttaccanti = 0;
+//			for (Pedina p: listaPedine.values()) {
+//	15			if (p.getGiocatore() == giocatore) {
+//					cont++;
+//	16				if (p.isAttaccante()) {
+//						contAttaccanti++;
+//	17					if (pedinaAttaccanteAvversario(giocatore, intToChar(p.getRiga()), p.getColonna()) == 0)
+//							return true;
+//					}
+//				}
+//			}
+//	18		if (cont > 0) {
+//	19			if (contAttaccanti == 0)
+//					System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Il giocatore " + giocatore + " non ha attaccanti");
+//				else
+//					System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Nessun attaccante del giocatore " + giocatore + " può attaccare");
+//			}
+//			break;
+//		}
+		
+//		}
+//	20	if (cont == 0)
+//			System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Il giocatore " + giocatore + " non ha pedine schierate");
+//		return false;
+//	}
+		
+		
 		Tavolo tavolo = Tavolo.getTavolo();
 		tavolo.reset();
 		
-		// mossa 0 non valida
+		/* TC1
+		 * mossa 0 non valida
+		 * decisione 1 : T && T && T && T && T ---> T
+		 */
 		assertFalse(tavolo.mossaEseguibile('0', 'X'));
 		
-		// mossa 1 eseguibile - almeno una cella libera nella prima colonna
+		/* TC2
+		 * mossa 1 eseguibile - almeno una cella libera nella prima colonna
+		 * decisione 1 : F && ? && ? && ? && ? ---> F
+		 * decisione 2 : T && T ---> T
+		 * decisione 2 : T && F ---> F
+		 * decisione 2 : F && T ---> F
+		 * decisione 3 : T
+		 */
+		tavolo.posizionaPedina('X', 'A', '1', 'A'); // decisione 2 : T && T ---> T
+		tavolo.posizionaPedina('X', 'A', '1', 'B'); // decisione 2 : T && F ---> F
+		tavolo.posizionaPedina('O', 'A', '1', 'H'); // decisione 2 : F && T ---> F
 		assertTrue(tavolo.mossaEseguibile('1', 'X'));
 		
-		// mossa 1 non eseguibile - nessuna cella libera nella prima colonna
+		/* TC3
+		 * mossa 1 non eseguibile - nessuna cella libera nella prima colonna
+		 * decisione 1 : F && ? && ? && ? && ? ---> F
+		 * decisione 2 : T && T ---> T
+		 * decisione 3 : F
+		 * decisione 20 : F
+		 */
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		tavolo.posizionaPedina('X', 'A', '2', 'A');
 		tavolo.posizionaPedina('X', 'A', '3', 'A');
@@ -149,66 +261,173 @@ public class TavoloTest {
 		tavolo.posizionaPedina('X', 'A', '8', 'A');
 		assertFalse(tavolo.mossaEseguibile('1', 'X'));
 		
-		// mossa 2 eseguibile - almeno una pedina movibile
+		/* TC4
+		 * mossa 2 eseguibile - almeno una pedina movibile
+		 * decisione 1 : T && F && ? && ? && ? ---> F
+		 * decisione 4 : T
+		 * decisione 5 : T
+		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
+		tavolo.posizionaPedina('X', 'A', '1', 'A'); // D4:T - D5:T
 		assertTrue(tavolo.mossaEseguibile('2', 'X'));
 		
-		// mossa 2 non eseguibile - nessuna pedina mobibile
+		/* TC5
+		 * mossa 2 non eseguibile - nessuna pedina movibile
+		 * decisione 1 : T && F && ? && ? && ? ---> F
+		 * decisione 4 : T
+		 * decisione 4 : F
+		 * decisione 5 : F
+		 * decisione 6 : T
+		 * decisione 20 : F
+		 */
 		tavolo.reset();
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('O', 'A', '1', 'B');
 		tavolo.posizionaPedina('O', 'A', '2', 'A');
+		tavolo.posizionaPedina('O', 'A', '1', 'B');
 		tavolo.posizionaPedina('O', 'A', '2', 'B');
 		assertFalse(tavolo.mossaEseguibile('2', 'X'));
 		
-		// mossa 3 eseguibile - almeno una pedina unibile
+		/* TC6
+		 * mossa 2 non eseguibile - nessuna pedina schierata
+		 * decisione 1 : T && F && ? && ? && ? ---> F
+		 * decisione 6 : F
+		 * decisione 20 : T
+		 */
+		tavolo.reset();
+		assertFalse(tavolo.mossaEseguibile('2', 'X'));
+		
+		/* TC7
+		 * mossa 3 eseguibile - almeno una pedina unibile
+		 * decisione 1 : T && T && F && ? && ? ---> F
+		 * decisione 7 : T
+		 * decisione 8 : T
+		 */
 		tavolo.reset();
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		tavolo.posizionaPedina('X', 'A', '1', 'B');
 		assertTrue(tavolo.mossaEseguibile('3', 'X'));
 		
-		// mossa 3 non eseguibile - nessuna pedina unibile
+		/* TC8
+		 * mossa 3 non eseguibile - nessuna pedina unibile
+		 * decisione 1 : T && T && F && ? && ? ---> F
+		 * decisione 7 : T
+		 * decisione 8 : F
+		 * decisione 9 : T
+		 * decisione 20 : F
+		 */
 		tavolo.reset();
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		tavolo.posizionaPedina('X', 'A', '3', 'A');
 		assertFalse(tavolo.mossaEseguibile('3', 'X'));
 		
-		// mossa 4 eseguibile - almeno una pedina può attaccare una pedina
+		/* TC9
+		 * mossa 3 non eseguibile - nessuna pedina schierata
+		 * decisione 1 : T && T && F && ? && ? ---> F
+		 * decisione 7 : F
+		 * decisione 9 : F
+		 * decisione 20 : T
+		 */
+		tavolo.reset();
+		tavolo.posizionaPedina('O', 'A', '1', 'H');
+		assertFalse(tavolo.mossaEseguibile('3', 'X'));
+		
+		/* TC10
+		 * mossa 4 eseguibile - almeno una pedina può attaccare una pedina
+		 * decisione 1 : T && T && T && F && ? ---> F
+		 * decisione 10 : T
+		 * decisione 11 : T
+		 * decisione 12 : T
+		 */
 		tavolo.reset();
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		tavolo.posizionaPedina('O', 'A', '1', 'B');
 		assertTrue(tavolo.mossaEseguibile('4', 'X'));
 		
-		// mossa 4 non eseguibile - nessuna pedina può attaccare una pedina
+		/* TC11
+		 * mossa 4 non eseguibile - nessuna pedina può attaccare una pedina
+		 * decisione 1 : T && T && T && F && ? ---> F
+		 * decisione 10 : T
+		 * decisione 11 : T
+		 * decisione 12 : F
+		 * decisione 13 : T
+		 * decisione 14 : F
+		 * decisione 20 : F
+		 */
 		tavolo.reset();
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('O', 'A', '1', 'C');
 		assertFalse(tavolo.mossaEseguibile('4', 'X'));
 		
-		// mossa 4 non eseguibile - nessuna pedina attaccante
+		/* TC12
+		 * mossa 4 non eseguibile - nessuna pedina attaccante
+		 * decisione 1 : T && T && T && F && ? ---> F
+		 * decisione 10 : T
+		 * decisione 11 : F
+		 * decisione 13 : T
+		 * decisione 14 : T
+		 * decisione 20 : F
+		 */
 		tavolo.reset();
 		tavolo.posizionaPedina('X', 'D', '1', 'A');
-		tavolo.posizionaPedina('O', 'A', '2', 'A');
 		assertFalse(tavolo.mossaEseguibile('4', 'X'));
 		
-		// mossa 5 eseguibile - almeno una pedina può attaccare l'avversario
+		/* TC13
+		 * mossa 4 non eseguibile - nessuna pedina schierata
+		 * decisione 1 : T && T && T && F && ? ---> F
+		 * decisione 10 : F
+		 * decisione 13 : F
+		 * decisione 20 : T
+		 */
+		tavolo.reset();
+		tavolo.posizionaPedina('O', 'D', '1', 'H');
+		assertFalse(tavolo.mossaEseguibile('4', 'X'));
+		
+		/* TC14
+		 * mossa 5 eseguibile - almeno una pedina può attaccare l'avversario
+		 * decisione 1 : T && T && T && T && F ---> F
+		 * decisione 15 : T
+		 * decisione 16 : T
+		 * decisione 17 : T
+		 */
 		tavolo.reset();
 		tavolo.posizionaPedina('X', 'A', '1', 'H');
 		assertTrue(tavolo.mossaEseguibile('5', 'X'));
 		
-		// mossa 5 non eseguibile - nessuna pedina può attaccare l'avversario
+		/* TC15
+		 * mossa 5 non eseguibile - nessuna pedina può attaccare l'avversario
+		 * decisione 1 : T && T && T && T && F ---> F
+		 * decisione 15 : T
+		 * decisione 16 : T
+		 * decisione 17 : F
+		 * decisione 18 : T
+		 * decisione 19 : F
+		 * decisione 20 : F
+		 */
 		tavolo.reset();
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		assertFalse(tavolo.mossaEseguibile('5', 'X'));
 		
-		// mossa 5 non eseguibile - nessuna pedina attaccante
+		/* TC16
+		 * mossa 5 non eseguibile - nessuna pedina attaccante
+		 * decisione 1 : T && T && T && T && F ---> F
+		 * decisione 15 : T
+		 * decisione 16 : F
+		 * decisione 18 : T
+		 * decisione 19 : T
+		 * decisione 20 : F
+		 */
 		tavolo.posizionaPedina('X', 'D', '1', 'H');
 		assertFalse(tavolo.mossaEseguibile('5', 'X'));
 		
-		// mossa 2 non eseguibile - nessuna pedina schierata
-		tavolo.reset();
-		assertFalse(tavolo.mossaEseguibile('2', 'X'));
+		/* TC17
+		 * mossa 5 non eseguibile - nessuna pedina schierata
+		 * decisione 1 : T && T && T && T && F ---> F
+		 * decisione 15 : F
+		 * decisione 18 : F
+		 * decisione 20 : T
+		 */
+		tavolo.posizionaPedina('O', 'D', '1', 'H');
+		assertFalse(tavolo.mossaEseguibile('5', 'X'));
+		
 	}
 
 	@Test
