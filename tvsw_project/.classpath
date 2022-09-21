@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="C:/Users/giamp/tools_x_tvsw_2022/mockito-all-2.0.2-beta.jar"/>
 	<classpathentry kind="lib" path="C:/Users/giamp/tools_x_tvsw_2022/mockito-core-3.8.0.jar"/>
 	<classpathentry kind="var" path="OPENJML_RUNTIME_LIBRARY"/>
+	<classpathentry kind="lib" path="C:/Users/giamp/tools_x_tvsw_2022/JUnitParams-1.1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

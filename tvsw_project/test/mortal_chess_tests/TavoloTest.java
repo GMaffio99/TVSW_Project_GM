@@ -4,7 +4,13 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 
 import mortal_chess.Attaccante;
 import mortal_chess.AttaccanteDifensore;
@@ -13,19 +19,28 @@ import mortal_chess.Difensore;
 import mortal_chess.Pedina;
 import mortal_chess.Tavolo;
 
+@RunWith(JUnitParamsRunner.class)
 public class TavoloTest {
 
+	static Tavolo tavolo;
+	
+	@BeforeClass
+	public static void setupTavolo() {
+		tavolo = Tavolo.getTavolo();
+	}
+	
+	@Before
+	public void resetTavolo() {
+		tavolo.reset();
+	}
+	
 	@Test
 	public void testGetTavolo() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		assertNotNull(tavolo);
 	}
 
 	@Test
 	public void testGetListaPedineAndReset() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		assertTrue(tavolo.getListaPedine().isEmpty());
 		tavolo.getListaPedine().put(0, null);
 		assertFalse(tavolo.getListaPedine().isEmpty());
@@ -35,8 +50,6 @@ public class TavoloTest {
 
 	@Test
 	public void testSetPuntiAndGetPuntiGiocatore() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		assertEquals(tavolo.getPuntiGiocatoreX(), 10);
 		assertEquals(tavolo.getPuntiGiocatoreO(), 10);
 		tavolo.setPuntiGiocatoreX(3);
@@ -50,8 +63,6 @@ public class TavoloTest {
 
 	@Test
 	public void testPartitaFinitaAndGetVincitore() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		assertFalse(tavolo.partitaFinita());
 		tavolo.setPuntiGiocatoreX(0);
 		assertTrue(tavolo.partitaFinita());
@@ -62,56 +73,33 @@ public class TavoloTest {
 		assertEquals(tavolo.getVincitore(), 'X');
 	}
 	
+	
 	@Test
-	public void testCharToInt() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
-		assertEquals(tavolo.charToInt('0'), 0);
-		assertEquals(tavolo.charToInt('1'), 1);
-		assertEquals(tavolo.charToInt('2'), 2);
-		assertEquals(tavolo.charToInt('3'), 3);
-		assertEquals(tavolo.charToInt('4'), 4);
-		assertEquals(tavolo.charToInt('5'), 5);
-		assertEquals(tavolo.charToInt('6'), 6);
-		assertEquals(tavolo.charToInt('7'), 7);
-		assertEquals(tavolo.charToInt('8'), 8);
-		assertEquals(tavolo.charToInt('9'), 0);
+	@Parameters({"0, 0", "1, 1", "2, 2", "3, 3", "4, 4", "5, 5", "6, 6", "7, 7", "8, 8", "9, 0"})
+	public void testCharToInt(char c, int i) {
+		assertEquals(tavolo.charToInt(c), i);
 	}
 	
 	@Test
-	public void testIntToChar() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
-		assertEquals(tavolo.intToChar(0), '0');
-		assertEquals(tavolo.intToChar(1), '1');
-		assertEquals(tavolo.intToChar(2), '2');
-		assertEquals(tavolo.intToChar(3), '3');
-		assertEquals(tavolo.intToChar(4), '4');
-		assertEquals(tavolo.intToChar(5), '5');
-		assertEquals(tavolo.intToChar(6), '6');
-		assertEquals(tavolo.intToChar(7), '7');
-		assertEquals(tavolo.intToChar(8), '8');
-		assertEquals(tavolo.intToChar(9), '0');
+	@Parameters({"0, 0", "1, 1", "2, 2", "3, 3", "4, 4", "5, 5", "6, 6", "7, 7", "8, 8", "9, 0"})
+	public void testIntToChar(int i, char c) {
+		assertEquals(tavolo.intToChar(i), c);
 	}
 	
 	@Test
-	public void testGetIndex() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
-		assertEquals(tavolo.getIndex('1', 'A'), 0);
-		assertEquals(tavolo.getIndex(1, 'A'), 0);
-		assertEquals(tavolo.getIndex('2', 'C'), 10);
-		assertEquals(tavolo.getIndex(2, 'C'), 10);
-		assertEquals(tavolo.getIndex('3', 'E'), 20);
-		assertEquals(tavolo.getIndex(3, 'E'), 20);
-		assertEquals(tavolo.getIndex('8', 'H'), 63);
-		assertEquals(tavolo.getIndex(8, 'H'), 63);
+	@Parameters({"1, A, 0", "2, C, 10", "3, E, 20", "8, H, 63"})
+	public void testGetIndexWithCharRow(char r, char c, int index) {
+		assertEquals(tavolo.getIndex(r, c), index);
+	}
+	
+	@Test
+	@Parameters({"1, A, 0", "2, C, 10", "3, E, 20", "8, H, 63"})
+	public void testGetIndexWithIntRow(int r, char c, int index) {
+		assertEquals(tavolo.getIndex(r, c), index);
 	}
 	
 	@Test
 	public void testGetPedina() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		assertNull(tavolo.getPedina('1', 'A'));
 		assertNull(tavolo.getPedina(1, 'A'));
 		Pedina p = new Attaccante('X', 1, 'A');
@@ -222,8 +210,6 @@ public class TavoloTest {
 //	}
 		
 		
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		
 		/* TC1
 		 * mossa 0 non valida
@@ -239,6 +225,7 @@ public class TavoloTest {
 		 * decisione 2 : F && T ---> F
 		 * decisione 3 : T
 		 */
+		tavolo.reset();
 		tavolo.posizionaPedina('X', 'A', '1', 'A'); // decisione 2 : T && T ---> T
 		tavolo.posizionaPedina('X', 'A', '1', 'B'); // decisione 2 : T && F ---> F
 		tavolo.posizionaPedina('O', 'A', '1', 'H'); // decisione 2 : F && T ---> F
@@ -251,6 +238,7 @@ public class TavoloTest {
 		 * decisione 3 : F
 		 * decisione 20 : F
 		 */
+		tavolo.reset();
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		tavolo.posizionaPedina('X', 'A', '2', 'A');
 		tavolo.posizionaPedina('X', 'A', '3', 'A');
@@ -415,6 +403,7 @@ public class TavoloTest {
 		 * decisione 19 : T
 		 * decisione 20 : F
 		 */
+		tavolo.reset();
 		tavolo.posizionaPedina('X', 'D', '1', 'H');
 		assertFalse(tavolo.mossaEseguibile('5', 'X'));
 		
@@ -425,6 +414,7 @@ public class TavoloTest {
 		 * decisione 18 : F
 		 * decisione 20 : T
 		 */
+		tavolo.reset();
 		tavolo.posizionaPedina('O', 'D', '1', 'H');
 		assertFalse(tavolo.mossaEseguibile('5', 'X'));
 		
@@ -432,8 +422,6 @@ public class TavoloTest {
 
 	@Test
 	public void testCellaOccupata() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		assertFalse(tavolo.cellaOccupata('1', 'A'));
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		assertTrue(tavolo.cellaOccupata('1', 'A'));
@@ -441,8 +429,6 @@ public class TavoloTest {
 
 	@Test
 	public void testPosizionaPedina() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		tavolo.posizionaPedina('O', 'D', '2', 'B');
 		Pedina p = tavolo.getPedina('2', 'B');
 		assertEquals(p.getGiocatore(), 'O');
@@ -455,8 +441,6 @@ public class TavoloTest {
 	
 	@Test
 	public void testGetCelleAdiacenti() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		ArrayList<Coppia<Integer, Character>> celleAdiacenti = tavolo.getCelleAdiacenti('2', 'B', false);
 		assertEquals(celleAdiacenti.size(), 8);
 		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(1, 'A')));
@@ -486,8 +470,6 @@ public class TavoloTest {
 
 	@Test
 	public void testPedinaMovibile() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedinaMovibile('X', '1', 'A'), 2);
 		// return -1 - pedina appartenente al giocatore avversario
@@ -504,8 +486,6 @@ public class TavoloTest {
 
 	@Test
 	public void testCellaRaggiungibile() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		// return -1 - cella non raggiungibile perchè non adiacente
 		assertEquals(tavolo.cellaRaggiungibile('1', 'A', '3', 'A'), -1);
@@ -518,9 +498,6 @@ public class TavoloTest {
 
 	@Test
 	public void testMuoviPedina() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
-		
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		assertEquals(tavolo.getListaPedine().get(0).getRiga(), 1);
 		assertEquals(tavolo.getListaPedine().get(0).getColonna(), 'A');
@@ -536,8 +513,6 @@ public class TavoloTest {
 
 	@Test
 	public void testPedinaUnibile() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedinaUnibile('X', '1', 'A'), 2);
 		// return -1 - pedina appartenente al giocatore avversario
@@ -552,8 +527,6 @@ public class TavoloTest {
 
 	@Test
 	public void testPedineUnibili() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedineUnibili('X', '1', 'A', '2', 'A'), 2);
 		// return -1 - pedina appartenente al giocatore avversario
@@ -567,9 +540,6 @@ public class TavoloTest {
 
 	@Test
 	public void testUnisciPedine() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
-		
 		Pedina p1 = new Attaccante('X', 1, 'A');
 		Pedina p2 = new Difensore('X', 2, 'A');
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
@@ -588,8 +558,6 @@ public class TavoloTest {
 
 	@Test
 	public void testPedinaAttaccante() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedinaAttaccante('X', '1', 'A'), 2);
 		// return -1 - pedina appartenente all'avversario
@@ -607,8 +575,6 @@ public class TavoloTest {
 
 	@Test
 	public void testPedinaAttaccabile() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedinaAttaccabile('X', '1', 'A', '1', 'B'), 2);
 		// return -1 - pedina da attaccare non appartenente all'avversario
@@ -624,8 +590,6 @@ public class TavoloTest {
 
 	@Test
 	public void testAttaccaPedina() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		// pedina attaccante AD non esaurisce punti attacco, pedina attaccata esaurisce punti difesa
 		tavolo.getListaPedine().put(0, new AttaccanteDifensore('X', 1, 'A', 2, 1));
 		tavolo.getListaPedine().put(1, new Difensore('O', 1, 'B', 3));
@@ -657,8 +621,6 @@ public class TavoloTest {
 
 	@Test
 	public void testPedinaAttaccanteAvversario() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedinaAttaccanteAvversario('X', '1', 'H'), 2);
 		// return -1 - pedina appartenente all'avversario
@@ -677,8 +639,6 @@ public class TavoloTest {
 
 	@Test
 	public void testAttaccaAvversario() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		// pedina attaccante AD non esaurisce punti attacco
 		tavolo.getListaPedine().put(7, new AttaccanteDifensore('X', 1, 'H', 2, 1));
 		tavolo.attaccaAvversario('X', '1', 'H');
@@ -704,8 +664,6 @@ public class TavoloTest {
 
 	@Test
 	public void testDiminuisciPuntiGiocatore() {
-		Tavolo tavolo = Tavolo.getTavolo();
-		tavolo.reset();
 		assertEquals(tavolo.getPuntiGiocatoreX(), 10);
 		assertEquals(tavolo.getPuntiGiocatoreO(), 10);
 		tavolo.diminuisciPuntiGiocatore('X', 5);
