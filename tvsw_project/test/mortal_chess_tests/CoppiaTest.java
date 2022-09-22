@@ -34,6 +34,8 @@ public class CoppiaTest {
 		assertTrue(c1.equals(c1));
 		assertFalse(c1.equals(c2));
 		assertFalse(c1.equals(c3));
+		Object o = new Object();
+		assertFalse(c1.equals(o));
 	}
 
 }

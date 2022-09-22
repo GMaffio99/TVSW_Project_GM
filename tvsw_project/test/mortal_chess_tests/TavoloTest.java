@@ -36,7 +36,7 @@ public class TavoloTest {
 	
 	@Test
 	public void testGetTavolo() {
-		assertNotNull(tavolo);
+		assertNotNull(Tavolo.getTavolo());
 	}
 
 	@Test
@@ -64,6 +64,7 @@ public class TavoloTest {
 	@Test
 	public void testPartitaFinitaAndGetVincitore() {
 		assertFalse(tavolo.partitaFinita());
+		assertEquals(tavolo.getVincitore(), '-');
 		tavolo.setPuntiGiocatoreX(0);
 		assertTrue(tavolo.partitaFinita());
 		assertEquals(tavolo.getVincitore(), 'O');
@@ -87,13 +88,13 @@ public class TavoloTest {
 	}
 	
 	@Test
-	@Parameters({"1, A, 0", "2, C, 10", "3, E, 20", "8, H, 63"})
+	@Parameters({"1, A, 0", "2, B, 9", "3, C, 18", "4, D, 27", "5, E, 36", "6, F, 45", "7, G, 54", "8, H, 63", "9, I, -1"})
 	public void testGetIndexWithCharRow(char r, char c, int index) {
 		assertEquals(tavolo.getIndex(r, c), index);
 	}
 	
 	@Test
-	@Parameters({"1, A, 0", "2, C, 10", "3, E, 20", "8, H, 63"})
+	@Parameters({"1, A, 0", "2, B, 9", "3, C, 18", "4, D, 27", "5, E, 36", "6, F, 45", "7, G, 54", "8, H, 63", "9, I, -1"})
 	public void testGetIndexWithIntRow(int r, char c, int index) {
 		assertEquals(tavolo.getIndex(r, c), index);
 	}
@@ -118,10 +119,8 @@ public class TavoloTest {
 	@Test
 	public void testMossaEseguibileMCDC() {
 		
-//	1	if (mossa != '1' && mossa != '2' && mossa != '3' && mossa != '4' && mossa != '5')
-//			return false;
 //		int cont = 0;
-//		switch (mossa) {
+//	1	switch (mossa) {
 //
 //		case '1': {
 //			char colonna = giocatore == 'X' ? 'A' : 'H';
@@ -202,7 +201,9 @@ public class TavoloTest {
 //			}
 //			break;
 //		}
-		
+//		
+//		default: return false;
+//		
 //		}
 //	20	if (cont == 0)
 //			System.out.println("[" + giocatore + "]" + " MOSSA NON ESEGUIBILE! Il giocatore " + giocatore + " non ha pedine schierate");
@@ -213,13 +214,13 @@ public class TavoloTest {
 		
 		/* TC1
 		 * mossa 0 non valida
-		 * decisione 1 : T && T && T && T && T ---> T
+		 * decisione 1 : case default
 		 */
 		assertFalse(tavolo.mossaEseguibile('0', 'X'));
 		
 		/* TC2
 		 * mossa 1 eseguibile - almeno una cella libera nella prima colonna
-		 * decisione 1 : F && ? && ? && ? && ? ---> F
+		 * decisione 1 : case '1'
 		 * decisione 2 : T && T ---> T
 		 * decisione 2 : T && F ---> F
 		 * decisione 2 : F && T ---> F
@@ -233,7 +234,7 @@ public class TavoloTest {
 		
 		/* TC3
 		 * mossa 1 non eseguibile - nessuna cella libera nella prima colonna
-		 * decisione 1 : F && ? && ? && ? && ? ---> F
+		 * decisione 1 : case '1'
 		 * decisione 2 : T && T ---> T
 		 * decisione 3 : F
 		 * decisione 20 : F
@@ -251,7 +252,7 @@ public class TavoloTest {
 		
 		/* TC4
 		 * mossa 2 eseguibile - almeno una pedina movibile
-		 * decisione 1 : T && F && ? && ? && ? ---> F
+		 * decisione 1 : case '2'
 		 * decisione 4 : T
 		 * decisione 5 : T
 		 */
@@ -261,7 +262,7 @@ public class TavoloTest {
 		
 		/* TC5
 		 * mossa 2 non eseguibile - nessuna pedina movibile
-		 * decisione 1 : T && F && ? && ? && ? ---> F
+		 * decisione 1 : case '2'
 		 * decisione 4 : T
 		 * decisione 4 : F
 		 * decisione 5 : F
@@ -277,7 +278,7 @@ public class TavoloTest {
 		
 		/* TC6
 		 * mossa 2 non eseguibile - nessuna pedina schierata
-		 * decisione 1 : T && F && ? && ? && ? ---> F
+		 * decisione 1 : case '2'
 		 * decisione 6 : F
 		 * decisione 20 : T
 		 */
@@ -286,7 +287,7 @@ public class TavoloTest {
 		
 		/* TC7
 		 * mossa 3 eseguibile - almeno una pedina unibile
-		 * decisione 1 : T && T && F && ? && ? ---> F
+		 * decisione 1 : case '3'
 		 * decisione 7 : T
 		 * decisione 8 : T
 		 */
@@ -297,7 +298,7 @@ public class TavoloTest {
 		
 		/* TC8
 		 * mossa 3 non eseguibile - nessuna pedina unibile
-		 * decisione 1 : T && T && F && ? && ? ---> F
+		 * decisione 1 : case '3'
 		 * decisione 7 : T
 		 * decisione 8 : F
 		 * decisione 9 : T
@@ -310,7 +311,7 @@ public class TavoloTest {
 		
 		/* TC9
 		 * mossa 3 non eseguibile - nessuna pedina schierata
-		 * decisione 1 : T && T && F && ? && ? ---> F
+		 * decisione 1 : case '3'
 		 * decisione 7 : F
 		 * decisione 9 : F
 		 * decisione 20 : T
@@ -321,7 +322,7 @@ public class TavoloTest {
 		
 		/* TC10
 		 * mossa 4 eseguibile - almeno una pedina può attaccare una pedina
-		 * decisione 1 : T && T && T && F && ? ---> F
+		 * decisione 1 : case '4'
 		 * decisione 10 : T
 		 * decisione 11 : T
 		 * decisione 12 : T
@@ -333,7 +334,7 @@ public class TavoloTest {
 		
 		/* TC11
 		 * mossa 4 non eseguibile - nessuna pedina può attaccare una pedina
-		 * decisione 1 : T && T && T && F && ? ---> F
+		 * decisione 1 : case '4'
 		 * decisione 10 : T
 		 * decisione 11 : T
 		 * decisione 12 : F
@@ -347,7 +348,7 @@ public class TavoloTest {
 		
 		/* TC12
 		 * mossa 4 non eseguibile - nessuna pedina attaccante
-		 * decisione 1 : T && T && T && F && ? ---> F
+		 * decisione 1 : case '4'
 		 * decisione 10 : T
 		 * decisione 11 : F
 		 * decisione 13 : T
@@ -360,7 +361,7 @@ public class TavoloTest {
 		
 		/* TC13
 		 * mossa 4 non eseguibile - nessuna pedina schierata
-		 * decisione 1 : T && T && T && F && ? ---> F
+		 * decisione 1 : case '4'
 		 * decisione 10 : F
 		 * decisione 13 : F
 		 * decisione 20 : T
@@ -371,7 +372,7 @@ public class TavoloTest {
 		
 		/* TC14
 		 * mossa 5 eseguibile - almeno una pedina può attaccare l'avversario
-		 * decisione 1 : T && T && T && T && F ---> F
+		 * decisione 1 : case '5'
 		 * decisione 15 : T
 		 * decisione 16 : T
 		 * decisione 17 : T
@@ -382,7 +383,7 @@ public class TavoloTest {
 		
 		/* TC15
 		 * mossa 5 non eseguibile - nessuna pedina può attaccare l'avversario
-		 * decisione 1 : T && T && T && T && F ---> F
+		 * decisione 1 : case '5'
 		 * decisione 15 : T
 		 * decisione 16 : T
 		 * decisione 17 : F
@@ -396,7 +397,7 @@ public class TavoloTest {
 		
 		/* TC16
 		 * mossa 5 non eseguibile - nessuna pedina attaccante
-		 * decisione 1 : T && T && T && T && F ---> F
+		 * decisione 1 : case '5'
 		 * decisione 15 : T
 		 * decisione 16 : F
 		 * decisione 18 : T
@@ -409,7 +410,7 @@ public class TavoloTest {
 		
 		/* TC17
 		 * mossa 5 non eseguibile - nessuna pedina schierata
-		 * decisione 1 : T && T && T && T && F ---> F
+		 * decisione 1 : case '5'
 		 * decisione 15 : F
 		 * decisione 18 : F
 		 * decisione 20 : T
@@ -466,6 +467,28 @@ public class TavoloTest {
 		assertEquals(celleAdiacenti.size(), 2);
 		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(7, 'H')));
 		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(8, 'G')));
+		celleAdiacenti = tavolo.getCelleAdiacenti('1', 'C', true);
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(1, 'B')));
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(2, 'C')));
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(1, 'D')));
+		celleAdiacenti = tavolo.getCelleAdiacenti('1', 'D', true);
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(1, 'C')));
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(2, 'D')));
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(1, 'E')));
+		celleAdiacenti = tavolo.getCelleAdiacenti('1', 'E', true);
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(1, 'D')));
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(2, 'E')));
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(1, 'F')));
+		celleAdiacenti = tavolo.getCelleAdiacenti('1', 'F', true);
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(1, 'E')));
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(2, 'F')));
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(1, 'G')));
+		celleAdiacenti = tavolo.getCelleAdiacenti('8', 'G', true);
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(8, 'F')));
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(7, 'G')));
+		assertTrue(celleAdiacenti.contains(new Coppia<Integer, Character>(8, 'H')));
+		celleAdiacenti = tavolo.getCelleAdiacenti('9', 'I', true);
+		assertNull(celleAdiacenti);
 	}
 
 	@Test
@@ -519,6 +542,7 @@ public class TavoloTest {
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		assertEquals(tavolo.pedinaUnibile('O', '1', 'A'), -1);
 		// return 1 - nessuna pedina adiacente da poter unire
+		tavolo.posizionaPedina('O', 'A', '1', 'B');
 		assertEquals(tavolo.pedinaUnibile('X', '1', 'A'), 1);
 		// return 0 - pedina unibile
 		tavolo.posizionaPedina('X', 'D', '2', 'A');
@@ -632,9 +656,12 @@ public class TavoloTest {
 		// return 1 - pedina non può attaccare l'avversario
 		tavolo.posizionaPedina('X', 'A', '1', 'G');
 		assertEquals(tavolo.pedinaAttaccanteAvversario('X', '1', 'G'), 1);
+		tavolo.posizionaPedina('O', 'A', '8', 'B');
+		assertEquals(tavolo.pedinaAttaccanteAvversario('O', '8', 'B'), 1);
 		// return 0 - pedina può attaccare l'avversario
 		tavolo.posizionaPedina('X', 'A', '1', 'H');
 		assertEquals(tavolo.pedinaAttaccanteAvversario('X', '1', 'H'), 0);
+		assertEquals(tavolo.pedinaAttaccanteAvversario('O', '1', 'A'), 0);
 	}
 
 	@Test

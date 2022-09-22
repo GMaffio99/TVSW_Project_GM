@@ -5,9 +5,12 @@ import java.io.IOException;
 
 public class Partita {
 	
-	private BufferedReader reader;
-	private Tavolo tavolo;
+	private /*@ spec_public @*/ BufferedReader reader;
+	private /*@ spec_public @*/ Tavolo tavolo;
 	
+	/*@ requires reader != null && tavolo != null;
+	  @ ensures this.reader == reader && this.tavolo == tavolo;
+	  @*/
 	public Partita(BufferedReader reader, Tavolo tavolo) {
 		this.reader = reader;
 		this.tavolo = tavolo;
@@ -291,26 +294,20 @@ public class Partita {
 		int esito;
 		char colonna;
 		char riga;
-		char col = giocatore == 'X' ? 'H' : 'A';
-
+		
 		do {
 			cella = selezioneCella(intestazione + " SELEZIONA LA CELLA DELLA PEDINA CON CUI ATTACCARE L'AVVERSARIO (A1-H8):");
 			colonna = cella.toUpperCase().charAt(0);
 			riga = cella.charAt(1);
-			esito = colonna == col ? 0 : 1;
-			if (esito != 0)
-				System.out.println(intestazione + " LA PEDINA CON CUI ATTACCARE L'AVVERSARIO DEVE TROVARSI SULLA COLONNA " + col);
-			else {
-				esito = tavolo.pedinaAttaccanteAvversario(giocatore, riga, colonna);
-				if (esito == -1)
-					System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna + riga + " APPARTIENE ALL'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
-				else if (esito == 1)
-					System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna + riga + " NON PUO' ATTACCARE L'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
-				else if (esito == 2)
-					System.out.println(intestazione + " NELLA CELLA " + colonna + riga + " NON E' PRESENTE UNA PEDINA, SELEZIONA UN'ALTRA CELLA");
-				else if (esito == 3)
-					System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna + riga + " NON E' UN ATTACCANTE, SELEZIONA UN'ALTRA PEDINA");
-			}
+			esito = tavolo.pedinaAttaccanteAvversario(giocatore, riga, colonna);
+			if (esito == -1)
+				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna + riga + " APPARTIENE ALL'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
+			else if (esito == 1)
+				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna + riga + " NON PUO' ATTACCARE L'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
+			else if (esito == 2)
+				System.out.println(intestazione + " NELLA CELLA " + colonna + riga + " NON E' PRESENTE UNA PEDINA, SELEZIONA UN'ALTRA CELLA");
+			else if (esito == 3)
+				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna + riga + " NON E' UN ATTACCANTE, SELEZIONA UN'ALTRA PEDINA");
 		} while (esito != 0);
 
 		tavolo.attaccaAvversario(giocatore, riga, colonna);

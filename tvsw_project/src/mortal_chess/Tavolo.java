@@ -208,7 +208,7 @@ public class Tavolo {
 			case 'F': col = 5; break;
 			case 'G': col = 6; break;
 			case 'H': col = 7; break;
-			default: col = -1; break;
+			default: return -1;
 		}
 		return 8 * (riga-1) + col;
 	}
@@ -236,9 +236,6 @@ public class Tavolo {
 	  @*/
 	public boolean mossaEseguibile(char mossa, char giocatore) {
 		
-		if (mossa != '1' && mossa != '2' && mossa != '3' && mossa != '4' && mossa != '5')
-			return false;
-
 		int cont = 0;
 
 		switch (mossa) {
@@ -342,6 +339,8 @@ public class Tavolo {
 
 			break;
 		}
+		
+		default: return false;
 
 		}
 
@@ -391,6 +390,7 @@ public class Tavolo {
 				case 'F': letteraPrecedente = 'E'; break;
 				case 'G': letteraPrecedente = 'F'; break;
 				case 'H': letteraPrecedente = 'G'; break;
+				default: break;
 			}
 			if (r != 1 && !ad) result.add(new Coppia<Integer, Character>(r-1, letteraPrecedente));
 			result.add(new Coppia<Integer, Character>(r, letteraPrecedente));
@@ -408,6 +408,7 @@ public class Tavolo {
 				case 'E': letteraSuccessiva = 'F'; break;
 				case 'F': letteraSuccessiva = 'G'; break;
 				case 'G': letteraSuccessiva = 'H'; break;
+				default: return null;
 			}
 			if (r != 1 && !ad) result.add(new Coppia<Integer, Character>(r-1, letteraSuccessiva));
 			result.add(new Coppia<Integer, Character>(r, letteraSuccessiva));

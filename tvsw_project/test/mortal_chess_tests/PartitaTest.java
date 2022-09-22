@@ -39,6 +39,11 @@ public class PartitaTest {
 	}
 	
 	@Test
+	public void testCostruttorePartita() {
+		assertNotNull(new Partita(mockReader, tavolo));
+	}
+	
+	@Test
 	public void testSelezioneCella() throws IOException {
 		// setup mocked input reader
 		when(mockReader.readLine()).thenReturn("") // no stringa vuota
@@ -68,6 +73,14 @@ public class PartitaTest {
 		partita.impostaPunti();
 		assertEquals(tavolo.getPuntiGiocatoreX(), 5);
 		assertEquals(tavolo.getPuntiGiocatoreO(), 5);
+		
+		// setup mocked input reader
+		mockReader.reset();
+		when(mockReader.readLine()).thenReturn("20"); // ok
+		// test
+		partita.impostaPunti();
+		assertEquals(tavolo.getPuntiGiocatoreX(), 20);
+		assertEquals(tavolo.getPuntiGiocatoreO(), 20);
 	}
 
 	@Test
@@ -80,16 +93,26 @@ public class PartitaTest {
 								   .thenReturn(" ") // no stringa spazio
 								   .thenReturn("A") // no lettera
 								   .thenReturn("1"); // ok
-//								   .thenReturn("2") // ok
-//								   .thenReturn("3") // ok
-//								   .thenReturn("4") // ok
-//								   .thenReturn("5"); // ok
-		// test
 		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '1');
-//		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '2');
-//		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '3');
-//		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '4');
-//		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '5');
+		
+		mockReader.reset();
+		when(mockReader.readLine()).thenReturn("2"); // ok
+		tavolo.posizionaPedina('X', 'A', '1', 'H');
+		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '2');
+		
+		mockReader.reset();
+		when(mockReader.readLine()).thenReturn("3"); // ok
+		tavolo.posizionaPedina('X', 'A', '2', 'H');
+		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '3');
+		
+		mockReader.reset();
+		when(mockReader.readLine()).thenReturn("4"); // ok
+		tavolo.posizionaPedina('O', 'D', '3', 'H');
+		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '4');
+		
+		mockReader.reset();
+		when(mockReader.readLine()).thenReturn("5"); // ok
+		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '5');
 	}
 
 	@Test
@@ -108,6 +131,15 @@ public class PartitaTest {
 		assertNull(tavolo.getPedina('2', 'A'));
 		partita.posizionarePedina('X', "[X]");
 		assertNotNull(tavolo.getPedina('2', 'A'));
+		
+		// setup mocked input reader
+		mockReader.reset();
+		when(mockReader.readLine()).thenReturn("D") // ok
+								   .thenReturn("H8"); // ok
+		// test
+		assertNull(tavolo.getPedina('8', 'H'));
+		partita.posizionarePedina('O', "[O]");
+		assertNotNull(tavolo.getPedina('8', 'H'));
 	}
 
 	@Test
@@ -134,6 +166,17 @@ public class PartitaTest {
 		partita.muoverePedina('X', "[X]");
 		assertNull(tavolo.getPedina('7', 'A'));
 		assertNotNull(tavolo.getPedina('7', 'B'));
+		
+		// setup mocked input reader
+		mockReader.reset();
+		when(mockReader.readLine()).thenReturn("H1") // ok
+								   .thenReturn("G2"); // ok
+		// test
+		assertNotNull(tavolo.getPedina('1', 'H'));
+		assertNull(tavolo.getPedina('2', 'G'));
+		partita.muoverePedina('O', "[O]");
+		assertNull(tavolo.getPedina('1', 'H'));
+		assertNotNull(tavolo.getPedina('2', 'G'));
 	}
 
 	@Test
@@ -160,6 +203,19 @@ public class PartitaTest {
 		partita.unirePedine('X', "[X]");
 		assertNotNull(tavolo.getPedina('7', 'A'));
 		assertNull(tavolo.getPedina('8', 'A'));
+		
+		// setup mocked input reader
+		mockReader.reset();
+		when(mockReader.readLine()).thenReturn("H1") // ok
+								   .thenReturn("H2"); // ok
+		// setup tavolo
+		tavolo.posizionaPedina('O', 'A', '2', 'H');
+		// test
+		assertNotNull(tavolo.getPedina('1', 'H'));
+		assertNotNull(tavolo.getPedina('2', 'H'));
+		partita.unirePedine('O', "[O]");
+		assertNotNull(tavolo.getPedina('1', 'H'));
+		assertNull(tavolo.getPedina('2', 'H'));
 	}
 
 	@Test
@@ -188,18 +244,31 @@ public class PartitaTest {
 		partita.attaccarePedina('X', "[X]");
 		assertNull(tavolo.getPedina('7', 'A'));
 		assertNull(tavolo.getPedina('7', 'B'));
+		
+		// setup mocked input reader
+		mockReader.reset();
+		when(mockReader.readLine()).thenReturn("B3") // ok
+								   .thenReturn("A3"); // ok
+		// setup tavolo
+		tavolo.posizionaPedina('O', 'A', '3', 'B');
+		// test
+		assertNotNull(tavolo.getPedina('3', 'B'));
+		assertNotNull(tavolo.getPedina('3', 'A'));
+		partita.attaccarePedina('O', "[O]");
+		assertNull(tavolo.getPedina('3', 'B'));
+		assertNull(tavolo.getPedina('3', 'A'));
 	}
 
 	@Test
 	public void testAttaccareAvversario() throws IOException {
 		// setup mocked input reader
-		when(mockReader.readLine()).thenReturn("H1") // pedina appartenente all'avversario
+		when(mockReader.readLine()).thenReturn("A8") // pedina appartenente all'avversario
 								   .thenReturn("A1") // pedina non può attaccare l'avversario
 								   .thenReturn("H2") // cella vuota
 								   .thenReturn("H3") // pedina non attaccante
 								   .thenReturn("H4"); // ok
 		// setup tavolo
-		tavolo.posizionaPedina('O', 'A', '1', 'H');
+		tavolo.posizionaPedina('O', 'A', '8', 'A');
 		tavolo.posizionaPedina('X', 'A', '1', 'A');
 		tavolo.posizionaPedina('X', 'D', '3', 'H');
 		tavolo.posizionaPedina('X', 'A', '4', 'H');
@@ -208,6 +277,16 @@ public class PartitaTest {
 		assertEquals(tavolo.getPuntiGiocatoreO(), 10);
 		partita.attaccareAvversario('X', "[X]");
 		assertNull(tavolo.getPedina('4', 'H'));
+		assertEquals(tavolo.getPuntiGiocatoreO(), 9);
+		
+		// setup mocked input reader
+		mockReader.reset();
+		when(mockReader.readLine()).thenReturn("A8"); // ok
+		// test
+		assertNotNull(tavolo.getPedina('8', 'A'));
+		assertEquals(tavolo.getPuntiGiocatoreX(), 10);
+		partita.attaccareAvversario('O', "[O]");
+		assertNull(tavolo.getPedina('8', 'A'));
 		assertEquals(tavolo.getPuntiGiocatoreO(), 9);
 	}
 

@@ -38,10 +38,7 @@ public class Coppia<P, S> {
 			return true;
 		if (!(obj instanceof Coppia<?,?>))
 			return false;
-		return this.equals((Coppia<?,?>) obj);
-	}
-	
-	public boolean equals(Coppia<?, ?> c) {
+		Coppia<?,?> c = (Coppia<?,?>) obj;
 		return this.getPrimo().equals(c.getPrimo()) && this.getSecondo().equals(c.getSecondo());
 	}
 	
