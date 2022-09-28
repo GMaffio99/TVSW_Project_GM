@@ -1,0 +1,50 @@
+scenario MortalChess_scenario2.avalla
+
+load MortalChess.asm
+
+
+// nella cella (1,1) è posizionato un attaccante del giocatore 1
+exec giocatorePedina(1,1) := 1;
+exec tipologiaPedina(1,1) := ATTACCANTE;
+exec puntiAttacco(1,1) := 1;
+exec puntiDifesa(1,1) := 0;
+
+check turno = 1;
+
+// il giocatore 1 muove la pedina dalla cella (1,1) alla cella (3,3)
+set mossa := 2;
+set riga1 := 1;
+set colonna1 := 1;
+set riga2 := 3;
+set colonna2 := 3;
+set tipologia := VUOTA;
+
+step
+
+// mossa non valida, cella di destinazione non adiacente
+check turno = 1;
+check giocatorePedina(1,1) = 1;
+check tipologiaPedina(1,1) = ATTACCANTE;
+check puntiAttacco(1,1) = 1;
+check puntiDifesa(1,1) = 0;
+
+// il giocatore 1 muove la pedina dalla cella (1,1) alla cella (2,2)
+set mossa := 2;
+set riga1 := 1;
+set colonna1 := 1;
+set riga2 := 2;
+set colonna2 := 2;
+set tipologia := VUOTA;
+
+step
+
+// mossa valida
+check turno = 2;
+check giocatorePedina(1,1) = 0;
+check tipologiaPedina(1,1) = VUOTA;
+check puntiAttacco(1,1) = 0;
+check puntiDifesa(1,1) = 0;
+check giocatorePedina(2,2) = 1;
+check tipologiaPedina(2,2) = ATTACCANTE;
+check puntiAttacco(2,2) = 1;
+check puntiDifesa(2,2) = 0;

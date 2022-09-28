@@ -1,0 +1,64 @@
+scenario MortalChess_scenario4.avalla
+
+load MortalChess.asm
+
+
+// nella cella (1,1) è posizionato un attaccante del giocatore 1
+exec giocatorePedina(1,1) := 1;
+exec tipologiaPedina(1,1) := ATTACCANTE;
+exec puntiAttacco(1,1) := 1;
+exec puntiDifesa(1,1) := 0;
+// nella cella (2,1) è posizionato un difensore del giocatore 1
+exec giocatorePedina(2,1) := 1;
+exec tipologiaPedina(2,1) := DIFENSORE;
+exec puntiAttacco(2,1) := 0;
+exec puntiDifesa(2,1) := 1;
+// nella cella (1,2) è posizionato un attaccante del giocatore 2
+exec giocatorePedina(1,2) := 2;
+exec tipologiaPedina(1,2) := ATTACCANTE;
+exec puntiAttacco(1,2) := 1;
+exec puntiDifesa(1,2) := 0;
+
+check turno = 1;
+
+// il giocatore 1 attacca la pedina nella cella (2,1) con la pedina nella cella (1,2)
+set mossa := 4;
+set riga1 := 2;
+set colonna1 := 1;
+set riga2 := 1;
+set colonna2 := 2;
+set tipologia := VUOTA;
+
+step
+
+// mossa non valida, pedina non attaccante
+check turno = 1;
+check giocatorePedina(2,1) = 1;
+check tipologiaPedina(2,1) = DIFENSORE;
+check puntiAttacco(2,1) = 0;
+check puntiDifesa(2,1) = 1;
+check giocatorePedina(1,2) = 2;
+check tipologiaPedina(1,2) = ATTACCANTE;
+check puntiAttacco(1,2) = 1;
+check puntiDifesa(1,2) = 0;
+
+// il giocatore 1 attacca la pedina nella cella (2,1) con la pedina nella cella (1,1)
+set mossa := 4;
+set riga1 := 1;
+set colonna1 := 1;
+set riga2 := 1;
+set colonna2 := 2;
+set tipologia := VUOTA;
+
+step
+
+// mossa valida, entrambe le pedine vengono eliminate
+check turno = 2;
+check giocatorePedina(1,1) = 0;
+check tipologiaPedina(1,1) = VUOTA;
+check puntiAttacco(1,1) = 0;
+check puntiDifesa(1,1) = 0;
+check giocatorePedina(1,2) = 0;
+check tipologiaPedina(1,2) = VUOTA;
+check puntiAttacco(1,2) = 0;
+check puntiDifesa(1,2) = 0;
