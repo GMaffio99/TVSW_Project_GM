@@ -363,6 +363,7 @@ public class Tavolo {
 	  @ ensures listaPedine.containsKey(getIndex(riga, colonna));
 	  @*/
 	public void posizionaPedina(char giocatore, char tipologia, char riga, char colonna) {
+		assert (giocatore == 'X' && colonna == 'A') || (giocatore == 'O' && colonna == 'H');
 		Pedina p;
 		if (tipologia == 'A')
 			p = new Attaccante(giocatore, charToInt(riga), colonna);
@@ -466,7 +467,9 @@ public class Tavolo {
 	  @ 		listaPedine.get(getIndex(riga2, colonna2)) != null;
 	  @*/
 	public void muoviPedina(char riga1, char colonna1, char riga2, char colonna2) {
+		assert cellaRaggiungibile(riga1, colonna1, riga2, colonna2) == 0;
 		Pedina p = getPedina(riga1, colonna1);
+		assert p != null;
 		p.muovi(charToInt(riga2), colonna2);
 		listaPedine.remove(getIndex(riga1, colonna1));
 		listaPedine.put(getIndex(riga2, colonna2), p);
@@ -529,8 +532,10 @@ public class Tavolo {
 	  @ ensures listaPedine.get(getIndex(riga2, colonna2)) == null;
 	  @*/
 	public void unisciPedine(char riga1, char colonna1, char riga2, char colonna2) {
+		assert cellaRaggiungibile(riga1, colonna1, riga2, colonna2) == 0;
 		Pedina p1 = getPedina(riga1, colonna1);
 		Pedina p2 = getPedina(riga2, colonna2);
+		assert p1.getGiocatore() == p2.getGiocatore();
 		Pedina p = p1.unisci(p2);
 		listaPedine.replace(getIndex(riga1, colonna1), p);
 		listaPedine.remove(getIndex(riga2, colonna2));
@@ -592,8 +597,10 @@ public class Tavolo {
 	  @ requires riga1 != riga2 || colonna1 != colonna2;
 	  @*/
 	public void attaccaPedina(char riga1, char colonna1, char riga2, char colonna2) {
+		assert cellaRaggiungibile(riga1, colonna1, riga2, colonna2) == 0;
 		Pedina p1 = getPedina(riga1, colonna1);
 		Pedina p2 = getPedina(riga2, colonna2);
+		assert p1.getGiocatore() != p2.getGiocatore();
 		System.out.println("[" + p1.getGiocatore() + "]" + " LA PEDINA NELLA CELLA " + colonna1 + riga1 + " ATTACCA LA PEDINA NELLA CELLA " + colonna2 + riga2);
 		if (p1.isAttaccanteDifensore()) {
 			AttaccanteDifensore ad = (AttaccanteDifensore) p1;
@@ -655,7 +662,9 @@ public class Tavolo {
 	  @ requires colonna >= 'A' && colonna <= 'H';
 	  @*/
 	public void attaccaAvversario(char giocatore, char riga, char colonna) {
+		assert (giocatore == 'X' && colonna == 'H') || (giocatore == 'O' && colonna == 'A');
 		Pedina p = getPedina(riga, colonna);
+		assert p.getGiocatore() == giocatore;
 		if (p.isAttaccanteDifensore()) {
 			AttaccanteDifensore ad = (AttaccanteDifensore) p;
 			diminuisciPuntiGiocatore(giocatore, ad.getPuntiAttacco());
@@ -686,6 +695,7 @@ public class Tavolo {
 	  @ ensures giocatore == 'O' ==> puntiGiocatoreX == \old(puntiGiocatoreX) - punti;
 	  @ @*/
 	public void diminuisciPuntiGiocatore(char giocatore, int punti) {
+		assert punti >= 1;
 		if (giocatore == 'X')
 			setPuntiGiocatoreO(getPuntiGiocatoreO() - punti);
 		else
