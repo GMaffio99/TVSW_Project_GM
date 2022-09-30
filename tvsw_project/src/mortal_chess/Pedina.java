@@ -14,7 +14,7 @@ public abstract class Pedina {
 	  @*/
 	public Pedina(char g, int r, char c) {
 		giocatore = g;
-		cella = new Coppia(r, c); // TODO sistemare il warning e farlo notare
+		cella = new Coppia<Integer, Character>(r, c);
 	}
 	
 	//@ ensures \result == this.giocatore;

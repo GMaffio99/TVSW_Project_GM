@@ -3,15 +3,17 @@ package mortal_chess;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import static mortal_chess.TavoloUtils.*;
+
 public class Partita {
 	
-	private /*@ spec_public @*/ BufferedReader reader;
-	private /*@ spec_public @*/ Tavolo tavolo;
+	private /*@ spec_public @*/ final BufferedReader reader;
+	private /*@ spec_public @*/ final Tavolo tavolo;
 	
 	/*@ requires reader != null && tavolo != null;
 	  @ ensures this.reader == reader && this.tavolo == tavolo;
 	  @*/
-	public Partita(BufferedReader reader, Tavolo tavolo) {
+	public Partita(final BufferedReader reader, final Tavolo tavolo) {
 		this.reader = reader;
 		this.tavolo = tavolo;
 	}
@@ -34,8 +36,8 @@ public class Partita {
 			else {
 				char colonna = cella.toUpperCase().charAt(0);
 				char riga = cella.charAt(1);
-				esito = (colonna != 'A' && colonna != 'B' && colonna != 'C' && colonna != 'D' && colonna != 'E' && colonna != 'F' && colonna != 'G' && colonna != 'H') ||
-						(riga != '1' && riga != '2' && riga != '3' && riga != '4' && riga != '5' && riga != '6' && riga != '7' && riga != '8');
+				esito = colonna != 'A' && colonna != 'B' && colonna != 'C' && colonna != 'D' && colonna != 'E' && colonna != 'F' && colonna != 'G' && colonna != 'H' ||
+						riga != '1' && riga != '2' && riga != '3' && riga != '4' && riga != '5' && riga != '6' && riga != '7' && riga != '8';
 			}
 			if (esito)
 				System.out.println(intestazione.substring(0, 3) + " SCELTA NON VALIDA");
@@ -43,16 +45,6 @@ public class Partita {
 		return cella;
 	}
 
-	
-	//@ requires s != null && s.length() > 0;
-	public boolean isInteger(String s) { 
-		try {  
-			Integer.parseInt(s);  
-			return true;
-		} catch(NumberFormatException e){  
-			return false;  
-		}
-	}
 	
 	public void impostaPunti() throws IOException {
 		
@@ -68,10 +60,8 @@ public class Partita {
 				punti = Integer.parseInt(entry);
 				if (punti <= 0)
 					System.out.println("~~~ SCELTA NON VALIDA, INSERITE UN NUMERO POSITIVO ~~~");
-				else
-					break;
 			}
-		} while (true);
+		} while (punti <= 0);
 		
 		tavolo.setPunti(punti);
 		
@@ -168,12 +158,13 @@ public class Partita {
 			colonna1 = cella.toUpperCase().charAt(0);
 			riga1 = cella.charAt(1);
 			esito = tavolo.pedinaMovibile(giocatore, riga1, colonna1);
-			if (esito == -1)
+			if (esito == -1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna1 + riga1 + " APPARTIENE ALL'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 1)
+			} else if (esito == 1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna1 + riga1 + " NON PUO' ESSERE MOSSA, SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 2)
+			} else if (esito == 2) {
 				System.out.println(intestazione + " NELLA CELLA " + colonna1 + riga1 + " NON E' PRESENTE UNA PEDINA, SELEZIONA UN'ALTRA CELLA");
+			}
 		} while (esito != 0);
 
 		char riga2;
@@ -184,10 +175,11 @@ public class Partita {
 			colonna2 = cella.toUpperCase().charAt(0);
 			riga2 = cella.charAt(1);
 			esito = tavolo.cellaRaggiungibile(riga1, colonna1, riga2, colonna2);
-			if (esito == -1)
+			if (esito == -1) {
 				System.out.println(intestazione + " LA CELLA " + colonna2 + riga2 + " NON E' RAGGIUNGIBILE DALLA PEDINA SELEZIONATA, SELEZIONA UN'ALTRA CELLA");
-			else if (esito == 1)
+			} else if (esito == 1) {
 				System.out.println(intestazione + " LA CELLA " + colonna2 + riga2 + " E' GIA' OCCUPATA, SELEZIONA UN'ALTRA CELLA");
+			}
 		} while (esito != 0);
 
 		tavolo.muoviPedina(riga1, colonna1, riga2, colonna2);
@@ -210,12 +202,13 @@ public class Partita {
 			colonna1 = cella.toUpperCase().charAt(0);
 			riga1 = cella.charAt(1);
 			esito = tavolo.pedinaUnibile(giocatore, riga1, colonna1);
-			if (esito == -1)
+			if (esito == -1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna1 + riga1 + " APPARTIENE ALL'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 1)
+			} else if (esito == 1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna1 + riga1 + " NON PUO' ESSERE UNITA, SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 2)
+			} else if (esito == 2) {
 				System.out.println(intestazione + " NELLA CELLA " + colonna1 + riga1 + " NON E' PRESENTE UNA PEDINA, SELEZIONA UN'ALTRA CELLA");
+			}
 		} while (esito != 0);
 
 		char riga2;
@@ -226,12 +219,13 @@ public class Partita {
 			colonna2 = cella.toUpperCase().charAt(0);
 			riga2 = cella.charAt(1);
 			esito = tavolo.pedineUnibili(giocatore, riga1, colonna1, riga2, colonna2);
-			if (esito == -1)
+			if (esito == -1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna2 + riga2 + " APPARTIENE ALL'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 1)
+			} else if (esito == 1) {
 				System.out.println(intestazione + " LE PEDINE NELLE CELLE " + colonna1 + riga1 + " E " + colonna2 + riga2 + " NON POSSONO ESSERE UNITE, SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 2)
+			} else if (esito == 2) {
 				System.out.println(intestazione + " NELLA CELLA " + colonna2 + riga2 + " NON E' PRESENTE UNA PEDINA, SELEZIONA UN'ALTRA CELLA");
+			}
 		} while (esito != 0);
 
 		tavolo.unisciPedine(riga1, colonna1, riga2, colonna2);
@@ -254,14 +248,15 @@ public class Partita {
 			colonna1 = cella.toUpperCase().charAt(0);
 			riga1 = cella.charAt(1);
 			esito = tavolo.pedinaAttaccante(giocatore, riga1, colonna1);
-			if (esito == -1)
+			if (esito == -1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna1 + riga1 + " APPARTIENE ALL'AVVERSARIO, SELEZIONA UN'ALTRA CELLA");
-			else if (esito == 1)
+			} else if (esito == 1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna1 + riga1 + " NON HA AVVERSARI ADIACENTI DA ATTACCARE, SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 2)
+			} else if (esito == 2) {
 				System.out.println(intestazione + " NELLA CELLA " + colonna1 + riga1 + " NON E' PRESENTE UNA PEDINA, SELEZIONA UN'ALTRA CELLA");
-			else if (esito == 3)
+			} else if (esito == 3) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna1 + riga1 + " NON E' UN ATTACCANTE, SELEZIONA UN'ALTRA PEDINA");
+			}
 		} while (esito != 0);
 
 		char riga2;
@@ -272,12 +267,13 @@ public class Partita {
 			colonna2 = cella.toUpperCase().charAt(0);
 			riga2 = cella.charAt(1);
 			esito = tavolo.pedinaAttaccabile(giocatore, riga1, colonna1, riga2, colonna2);
-			if (esito == -1)
+			if (esito == -1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna2 + riga2 + " NON APPARTIENE ALL'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 1)
+			} else if (esito == 1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna2 + riga2 + " NON E' ATTACCABILE DALLA PEDINA NELLA CELLA " + colonna1 + riga1 + ", SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 2)
+			} else if (esito == 2) {
 				System.out.println(intestazione + " NELLA CELLA " + colonna2 + riga2 + " NON E' PRESENTE UNA PEDINA, SELEZIONA UN'ALTRA CELLA");
+			}
 		} while (esito != 0);
 
 		tavolo.attaccaPedina(riga1, colonna1, riga2, colonna2);
@@ -300,14 +296,15 @@ public class Partita {
 			colonna = cella.toUpperCase().charAt(0);
 			riga = cella.charAt(1);
 			esito = tavolo.pedinaAttaccanteAvversario(giocatore, riga, colonna);
-			if (esito == -1)
+			if (esito == -1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna + riga + " APPARTIENE ALL'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 1)
+			} else if (esito == 1) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna + riga + " NON PUO' ATTACCARE L'AVVERSARIO, SELEZIONA UN'ALTRA PEDINA");
-			else if (esito == 2)
+			} else if (esito == 2) {
 				System.out.println(intestazione + " NELLA CELLA " + colonna + riga + " NON E' PRESENTE UNA PEDINA, SELEZIONA UN'ALTRA CELLA");
-			else if (esito == 3)
+			} else if (esito == 3) {
 				System.out.println(intestazione + " LA PEDINA NELLA CELLA " + colonna + riga + " NON E' UN ATTACCANTE, SELEZIONA UN'ALTRA PEDINA");
+			}
 		} while (esito != 0);
 
 		tavolo.attaccaAvversario(giocatore, riga, colonna);

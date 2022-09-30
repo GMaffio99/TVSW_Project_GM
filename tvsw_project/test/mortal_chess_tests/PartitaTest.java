@@ -11,8 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-
 import static org.mockito.Mockito.*;
 
 import mortal_chess.Partita;
@@ -54,12 +52,6 @@ public class PartitaTest {
 								   .thenReturn("A1"); // ok
 		//test
 		assertEquals(partita.selezioneCella("SELEZIONA CELLA"), "A1");
-	}
-
-	@Test
-	@Parameters({"1, true", "100, true", "-3, true", "0.1, false", "1O, false", "ABC, false", " , false"})
-	public void testIsInteger(String s, boolean b) {
-		assertEquals(partita.isInteger(s), b); // no stringa testuale
 	}
 
 	@Test
