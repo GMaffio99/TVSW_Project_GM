@@ -8,15 +8,14 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import junitparams.JUnitParamsRunner;
 import static org.mockito.Mockito.*;
 
+import mortal_chess.Attaccante;
+import mortal_chess.Difensore;
 import mortal_chess.Partita;
 import mortal_chess.Tavolo;
+import mortal_chess.TavoloUtils;
 
-@RunWith(JUnitParamsRunner.class)
 public class PartitaTest {
 
 	static Tavolo tavolo;
@@ -89,17 +88,17 @@ public class PartitaTest {
 		
 		mockReader.reset();
 		when(mockReader.readLine()).thenReturn("2"); // ok
-		tavolo.posizionaPedina('X', 'A', '1', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Attaccante('X', 1, 'H'));
 		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '2');
 		
 		mockReader.reset();
 		when(mockReader.readLine()).thenReturn("3"); // ok
-		tavolo.posizionaPedina('X', 'A', '2', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'H'), new Attaccante('X', 2, 'H'));
 		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '3');
 		
 		mockReader.reset();
 		when(mockReader.readLine()).thenReturn("4"); // ok
-		tavolo.posizionaPedina('O', 'D', '3', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(3, 'H'), new Difensore('O', 3, 'H'));
 		assertEquals(partita.selezionaMossa('X', "SELEZIONA MOSSA"), '4');
 		
 		mockReader.reset();
@@ -118,7 +117,7 @@ public class PartitaTest {
 								   .thenReturn("A1") // cella occupata
 								   .thenReturn("A2"); // ok
 		// setup tavolo
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
 		// test
 		assertNull(tavolo.getPedina('2', 'A'));
 		partita.posizionarePedina('X', "[X]");
@@ -145,13 +144,13 @@ public class PartitaTest {
 								   .thenReturn("A8") // cella occupata
 								   .thenReturn("B7"); // ok
 		// setup tavolo
-		tavolo.posizionaPedina('O', 'A', '1', 'H');
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('X', 'A', '2', 'A');
-		tavolo.posizionaPedina('X', 'A', '1', 'B');
-		tavolo.posizionaPedina('X', 'A', '2', 'B');
-		tavolo.posizionaPedina('X', 'A', '7', 'A');
-		tavolo.posizionaPedina('X', 'A', '8', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Attaccante('O', 1, 'H'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'A'), new Attaccante('X', 2, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'B'), new Attaccante('X', 1, 'B'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'B'), new Attaccante('X', 2, 'B'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(7, 'A'), new Attaccante('X', 7, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(8, 'A'), new Attaccante('X', 8, 'A'));
 		// test
 		assertNotNull(tavolo.getPedina('7', 'A'));
 		assertNull(tavolo.getPedina('7', 'B'));
@@ -183,12 +182,12 @@ public class PartitaTest {
 								   .thenReturn("A6") // cella vuota
 								   .thenReturn("A8"); // ok
 		// setup tavolo
-		tavolo.posizionaPedina('O', 'A', '1', 'H');
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('X', 'A', '7', 'A');
-		tavolo.posizionaPedina('O', 'A', '7', 'B');
-		tavolo.posizionaPedina('X', 'A', '5', 'A');
-		tavolo.posizionaPedina('X', 'A', '8', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Attaccante('O', 1, 'H'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(7, 'A'), new Attaccante('X', 7, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(7, 'B'), new Attaccante('O', 7, 'B'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(5, 'A'), new Attaccante('X', 5, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(8, 'A'), new Attaccante('X', 8, 'A'));
 		// test
 		assertNotNull(tavolo.getPedina('7', 'A'));
 		assertNotNull(tavolo.getPedina('8', 'A'));
@@ -201,7 +200,7 @@ public class PartitaTest {
 		when(mockReader.readLine()).thenReturn("H1") // ok
 								   .thenReturn("H2"); // ok
 		// setup tavolo
-		tavolo.posizionaPedina('O', 'A', '2', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'H'), new Attaccante('O', 2, 'H'));
 		// test
 		assertNotNull(tavolo.getPedina('1', 'H'));
 		assertNotNull(tavolo.getPedina('2', 'H'));
@@ -223,13 +222,13 @@ public class PartitaTest {
 								   .thenReturn("A6") // cella vuota
 								   .thenReturn("B7"); // ok
 		// setup tavolo
-		tavolo.posizionaPedina('O', 'A', '1', 'H');
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('X', 'D', '3', 'A');
-		tavolo.posizionaPedina('X', 'A', '7', 'A');
-		tavolo.posizionaPedina('O', 'A', '7', 'B');
-		tavolo.posizionaPedina('X', 'A', '8', 'A');
-		tavolo.posizionaPedina('O', 'A', '7', 'C');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Attaccante('O', 1, 'H'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(3, 'A'), new Difensore('X', 3, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(7, 'A'), new Attaccante('X', 7, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(8, 'A'), new Attaccante('X', 8, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(7, 'C'), new Attaccante('O', 7, 'C'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(7, 'B'), new Attaccante('O', 7, 'B'));
 		// test
 		assertNotNull(tavolo.getPedina('7', 'A'));
 		assertNotNull(tavolo.getPedina('7', 'B'));
@@ -242,7 +241,7 @@ public class PartitaTest {
 		when(mockReader.readLine()).thenReturn("B3") // ok
 								   .thenReturn("A3"); // ok
 		// setup tavolo
-		tavolo.posizionaPedina('O', 'A', '3', 'B');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(3, 'B'), new Attaccante('O', 3, 'B'));
 		// test
 		assertNotNull(tavolo.getPedina('3', 'B'));
 		assertNotNull(tavolo.getPedina('3', 'A'));
@@ -260,10 +259,10 @@ public class PartitaTest {
 								   .thenReturn("H3") // pedina non attaccante
 								   .thenReturn("H4"); // ok
 		// setup tavolo
-		tavolo.posizionaPedina('O', 'A', '8', 'A');
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('X', 'D', '3', 'H');
-		tavolo.posizionaPedina('X', 'A', '4', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(8, 'A'), new Attaccante('O', 8, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(3, 'H'), new Difensore('X', 3, 'H'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(4, 'H'), new Attaccante('X', 4, 'H'));
 		// test
 		assertNotNull(tavolo.getPedina('4', 'H'));
 		assertEquals(tavolo.getPuntiGiocatoreO(), 10);

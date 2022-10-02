@@ -411,7 +411,7 @@ public class Tavolo {
 	  @ ensures listaPedine.get(getIndex(riga2, colonna2)) == null;
 	  @*/
 	public void unisciPedine(char riga1, char colonna1, char riga2, char colonna2) {
-		assert cellaRaggiungibile(riga1, colonna1, riga2, colonna2) == 0;
+		assert cellaRaggiungibile(riga1, colonna1, riga2, colonna2) == 1;
 		Pedina p1 = getPedina(riga1, colonna1);
 		Pedina p2 = getPedina(riga2, colonna2);
 		assert p1.getGiocatore() == p2.getGiocatore();
@@ -476,7 +476,7 @@ public class Tavolo {
 	  @ requires riga1 != riga2 || colonna1 != colonna2;
 	  @*/
 	public void attaccaPedina(char riga1, char colonna1, char riga2, char colonna2) {
-		assert cellaRaggiungibile(riga1, colonna1, riga2, colonna2) == 0;
+		assert cellaRaggiungibile(riga1, colonna1, riga2, colonna2) == 1;
 		Pedina p1 = getPedina(riga1, colonna1);
 		Pedina p2 = getPedina(riga2, colonna2);
 		assert p1.getGiocatore() != p2.getGiocatore();

@@ -5,16 +5,13 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import junitparams.JUnitParamsRunner;
 import mortal_chess.Attaccante;
 import mortal_chess.AttaccanteDifensore;
 import mortal_chess.Difensore;
 import mortal_chess.Pedina;
 import mortal_chess.Tavolo;
+import mortal_chess.TavoloUtils;
 
-@RunWith(JUnitParamsRunner.class)
 public class TavoloTest {
 
 	static Tavolo tavolo;
@@ -197,9 +194,9 @@ public class TavoloTest {
 		 * decisione 3 : T
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'A'); // decisione 2 : T && T ---> T
-		tavolo.posizionaPedina('X', 'A', '1', 'B'); // decisione 2 : T && F ---> F
-		tavolo.posizionaPedina('O', 'A', '1', 'H'); // decisione 2 : F && T ---> F
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A')); // decisione 2 : T && T ---> T
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'B'), new Attaccante('X', 1, 'B')); // decisione 2 : T && F ---> F
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Attaccante('O', 1, 'H')); // decisione 2 : F && T ---> F
 		assertTrue(tavolo.mossaEseguibile('1', 'X'));
 		
 		/* TC3
@@ -210,14 +207,14 @@ public class TavoloTest {
 		 * decisione 20 : F
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('X', 'A', '2', 'A');
-		tavolo.posizionaPedina('X', 'A', '3', 'A');
-		tavolo.posizionaPedina('X', 'A', '4', 'A');
-		tavolo.posizionaPedina('X', 'A', '5', 'A');
-		tavolo.posizionaPedina('X', 'A', '6', 'A');
-		tavolo.posizionaPedina('X', 'A', '7', 'A');
-		tavolo.posizionaPedina('X', 'A', '8', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'A'), new Attaccante('X', 2, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(3, 'A'), new Attaccante('X', 3, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(4, 'A'), new Attaccante('X', 4, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(5, 'A'), new Attaccante('X', 5, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(6, 'A'), new Attaccante('X', 6, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(7, 'A'), new Attaccante('X', 7, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(8, 'A'), new Attaccante('X', 8, 'A'));
 		assertFalse(tavolo.mossaEseguibile('1', 'X'));
 		
 		/* TC4
@@ -227,7 +224,7 @@ public class TavoloTest {
 		 * decisione 5 : T
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'A'); // D4:T - D5:T
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));// D4:T - D5:T
 		assertTrue(tavolo.mossaEseguibile('2', 'X'));
 		
 		/* TC5
@@ -240,10 +237,10 @@ public class TavoloTest {
 		 * decisione 20 : F
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('O', 'A', '2', 'A');
-		tavolo.posizionaPedina('O', 'A', '1', 'B');
-		tavolo.posizionaPedina('O', 'A', '2', 'B');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'A'), new Attaccante('O', 2, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'B'), new Attaccante('O', 1, 'B'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'B'), new Attaccante('O', 2, 'B'));
 		assertFalse(tavolo.mossaEseguibile('2', 'X'));
 		
 		/* TC6
@@ -262,8 +259,8 @@ public class TavoloTest {
 		 * decisione 8 : T
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('X', 'A', '1', 'B');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'B'), new Attaccante('X', 1, 'B'));
 		assertTrue(tavolo.mossaEseguibile('3', 'X'));
 		
 		/* TC8
@@ -275,8 +272,8 @@ public class TavoloTest {
 		 * decisione 20 : F
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('X', 'A', '3', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(3, 'A'), new Attaccante('X', 3, 'A'));
 		assertFalse(tavolo.mossaEseguibile('3', 'X'));
 		
 		/* TC9
@@ -287,7 +284,7 @@ public class TavoloTest {
 		 * decisione 20 : T
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('O', 'A', '1', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Attaccante('O', 1, 'H'));
 		assertFalse(tavolo.mossaEseguibile('3', 'X'));
 		
 		/* TC10
@@ -298,8 +295,8 @@ public class TavoloTest {
 		 * decisione 12 : T
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('O', 'A', '1', 'B');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'B'), new Attaccante('O', 1, 'B'));
 		assertTrue(tavolo.mossaEseguibile('4', 'X'));
 		
 		/* TC11
@@ -313,7 +310,7 @@ public class TavoloTest {
 		 * decisione 20 : F
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
 		assertFalse(tavolo.mossaEseguibile('4', 'X'));
 		
 		/* TC12
@@ -326,7 +323,7 @@ public class TavoloTest {
 		 * decisione 20 : F
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'D', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Difensore('X', 1, 'A'));
 		assertFalse(tavolo.mossaEseguibile('4', 'X'));
 		
 		/* TC13
@@ -337,7 +334,7 @@ public class TavoloTest {
 		 * decisione 20 : T
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('O', 'D', '1', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Difensore('O', 1, 'H'));
 		assertFalse(tavolo.mossaEseguibile('4', 'X'));
 		
 		/* TC14
@@ -348,7 +345,7 @@ public class TavoloTest {
 		 * decisione 17 : T
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Attaccante('X', 1, 'H'));
 		assertTrue(tavolo.mossaEseguibile('5', 'X'));
 		
 		/* TC15
@@ -362,7 +359,7 @@ public class TavoloTest {
 		 * decisione 20 : F
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
 		assertFalse(tavolo.mossaEseguibile('5', 'X'));
 		
 		/* TC16
@@ -375,7 +372,7 @@ public class TavoloTest {
 		 * decisione 20 : F
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('X', 'D', '1', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Difensore('X', 1, 'H'));
 		assertFalse(tavolo.mossaEseguibile('5', 'X'));
 		
 		/* TC17
@@ -386,7 +383,7 @@ public class TavoloTest {
 		 * decisione 20 : T
 		 */
 		tavolo.reset();
-		tavolo.posizionaPedina('O', 'D', '1', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Difensore('O', 1, 'H'));
 		assertFalse(tavolo.mossaEseguibile('5', 'X'));
 		
 	}
@@ -394,17 +391,17 @@ public class TavoloTest {
 	@Test
 	public void testCellaOccupata() {
 		assertFalse(tavolo.cellaOccupata('1', 'A'));
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
 		assertTrue(tavolo.cellaOccupata('1', 'A'));
 	}
 
 	@Test
 	public void testPosizionaPedina() {
-		tavolo.posizionaPedina('O', 'D', '2', 'B');
-		Pedina p = tavolo.getPedina('2', 'B');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Difensore('O', 1, 'H'));
+		Pedina p = tavolo.getPedina('1', 'H');
 		assertEquals(p.getGiocatore(), 'O');
-		assertEquals(p.getRiga(), 2);
-		assertEquals(p.getColonna(), 'B');
+		assertEquals(p.getRiga(), 1);
+		assertEquals(p.getColonna(), 'H');
 		assertTrue(p instanceof Difensore);
 		Difensore d = (Difensore) p;
 		assertEquals(d.getPuntiDifesa(), 1);
@@ -415,24 +412,24 @@ public class TavoloTest {
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedinaMovibile('X', '1', 'A'), 2);
 		// return -1 - pedina appartenente al giocatore avversario
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
 		assertEquals(tavolo.pedinaMovibile('O', '1', 'A'), -1);
 		// return 0 - pedina movibile
 		assertEquals(tavolo.pedinaMovibile('X', '1', 'A'), 0);
 		// return 1 - pedina non movibile per celle adiacenti occupate
-		tavolo.posizionaPedina('X', 'A', '1', 'B');
-		tavolo.posizionaPedina('X', 'D', '2', 'A');
-		tavolo.posizionaPedina('X', 'A', '2', 'B');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'B'), new Attaccante('X', 1, 'B'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'A'), new Difensore('X', 2, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'B'), new Attaccante('X', 2, 'B'));
 		assertEquals(tavolo.pedinaMovibile('X', '1', 'A'), 1);
 	}
 
 	@Test
 	public void testCellaRaggiungibile() {
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
 		// return -1 - cella non raggiungibile perchè non adiacente
 		assertEquals(tavolo.cellaRaggiungibile('1', 'A', '3', 'A'), -1);
 		// return 1 - cella non raggiungibile perchè occupata
-		tavolo.posizionaPedina('X', 'A', '2', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'A'), new Attaccante('X', 2, 'A'));
 		assertEquals(tavolo.cellaRaggiungibile('1', 'A', '2', 'A'), 1);
 		// return 0 - cella raggiungibile
 		assertEquals(tavolo.cellaRaggiungibile('1', 'A', '1', 'B'), 0);
@@ -440,7 +437,7 @@ public class TavoloTest {
 
 	@Test
 	public void testMuoviPedina() {
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
 		assertEquals(tavolo.getListaPedine().get(0).getRiga(), 1);
 		assertEquals(tavolo.getListaPedine().get(0).getColonna(), 'A');
 		Pedina p = new Attaccante('X', 1, 'A');
@@ -458,13 +455,13 @@ public class TavoloTest {
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedinaUnibile('X', '1', 'A'), 2);
 		// return -1 - pedina appartenente al giocatore avversario
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
 		assertEquals(tavolo.pedinaUnibile('O', '1', 'A'), -1);
 		// return 1 - nessuna pedina adiacente da poter unire
-		tavolo.posizionaPedina('O', 'A', '1', 'B');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'B'), new Attaccante('O', 1, 'B'));
 		assertEquals(tavolo.pedinaUnibile('X', '1', 'A'), 1);
 		// return 0 - pedina unibile
-		tavolo.posizionaPedina('X', 'D', '2', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'A'), new Difensore('X', 2, 'A'));
 		assertEquals(tavolo.pedinaUnibile('X', '1', 'A'), 0);
 	}
 
@@ -473,7 +470,7 @@ public class TavoloTest {
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedineUnibili('X', '1', 'A', '2', 'A'), 2);
 		// return -1 - pedina appartenente al giocatore avversario
-		tavolo.posizionaPedina('X', 'A', '2', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'A'), new Attaccante('X', 2, 'A'));
 		assertEquals(tavolo.pedineUnibili('O', '1', 'A', '2', 'A'), -1);
 		// return 1 - pedine non adiacenti
 		assertEquals(tavolo.pedineUnibili('X', '1', 'H', '2', 'A'), 1);
@@ -485,8 +482,8 @@ public class TavoloTest {
 	public void testUnisciPedine() {
 		Pedina p1 = new Attaccante('X', 1, 'A');
 		Pedina p2 = new Difensore('X', 2, 'A');
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
-		tavolo.posizionaPedina('X', 'D', '2', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'A'), new Difensore('X', 2, 'A'));
 		assertNotNull(tavolo.getListaPedine().get(0));
 		assertTrue(tavolo.getListaPedine().get(0).equals(p1));
 		assertNotNull(tavolo.getListaPedine().get(8));
@@ -504,15 +501,15 @@ public class TavoloTest {
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedinaAttaccante('X', '1', 'A'), 2);
 		// return -1 - pedina appartenente all'avversario
-		tavolo.posizionaPedina('X', 'A', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('X', 1, 'A'));
 		assertEquals(tavolo.pedinaAttaccante('O', '1', 'A'), -1);
 		// return 3 - pedina non attaccante
-		tavolo.posizionaPedina('X', 'D', '1', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Difensore('X', 1, 'H'));
 		assertEquals(tavolo.pedinaAttaccante('X', '1', 'H'), 3);
 		// return 1 - pedina non ha avversari adiacenti
 		assertEquals(tavolo.pedinaAttaccante('X', '1', 'A'), 1);
 		// return 0 - pedina può attaccare
-		tavolo.posizionaPedina('O', 'D', '1', 'B');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'B'), new Difensore('O', 1, 'B'));
 		assertEquals(tavolo.pedinaAttaccante('X', '1', 'A'), 0);
 	}
 
@@ -521,13 +518,13 @@ public class TavoloTest {
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedinaAttaccabile('X', '1', 'A', '1', 'B'), 2);
 		// return -1 - pedina da attaccare non appartenente all'avversario
-		tavolo.posizionaPedina('X', 'D', '2', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(2, 'A'), new Difensore('X', 2, 'A'));
 		assertEquals(tavolo.pedinaAttaccabile('X', '1', 'A', '2', 'A'), -1);
 		// return 1 - pedina da attaccare non adiacente
-		tavolo.posizionaPedina('O', 'D', '1', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Difensore('O', 1, 'H'));
 		assertEquals(tavolo.pedinaAttaccabile('X', '1', 'A', '1', 'H'), 1);
 		// return 0 - pedina attaccabile
-		tavolo.posizionaPedina('O', 'D', '1', 'B');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'B'), new Difensore('O', 1, 'B'));
 		assertEquals(tavolo.pedinaAttaccabile('X', '1', 'A', '1', 'B'), 0);
 	}
 
@@ -567,18 +564,18 @@ public class TavoloTest {
 		// return 2 - nessuna pedina nella cella
 		assertEquals(tavolo.pedinaAttaccanteAvversario('X', '1', 'H'), 2);
 		// return -1 - pedina appartenente all'avversario
-		tavolo.posizionaPedina('O', 'A', '1', 'A');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'A'), new Attaccante('O', 1, 'A'));
 		assertEquals(tavolo.pedinaAttaccanteAvversario('X', '1', 'A'), -1);
 		// return 3 - pedina non attaccante
-		tavolo.posizionaPedina('X', 'D', '8', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(8, 'H'), new Difensore('X', 8, 'H'));
 		assertEquals(tavolo.pedinaAttaccanteAvversario('X', '8', 'H'), 3);
 		// return 1 - pedina non può attaccare l'avversario
-		tavolo.posizionaPedina('X', 'A', '1', 'G');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'G'), new Attaccante('X', 1, 'G'));
 		assertEquals(tavolo.pedinaAttaccanteAvversario('X', '1', 'G'), 1);
-		tavolo.posizionaPedina('O', 'A', '8', 'B');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(8, 'B'), new Attaccante('O', 8, 'B'));
 		assertEquals(tavolo.pedinaAttaccanteAvversario('O', '8', 'B'), 1);
 		// return 0 - pedina può attaccare l'avversario
-		tavolo.posizionaPedina('X', 'A', '1', 'H');
+		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Attaccante('X', 1, 'H'));
 		assertEquals(tavolo.pedinaAttaccanteAvversario('X', '1', 'H'), 0);
 		assertEquals(tavolo.pedinaAttaccanteAvversario('O', '1', 'A'), 0);
 	}
