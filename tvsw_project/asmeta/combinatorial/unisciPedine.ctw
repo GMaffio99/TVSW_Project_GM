@@ -1,0 +1,12 @@
+Model unisciPedine
+ Parameters:
+   mossa: [1 .. 5]
+   riga1: [1 .. 8]
+   colonna1: [1 .. 8]
+   riga2: [1 .. 8]
+   colonna2: [1 .. 8]
+
+ Constraints:
+    # mossa == 3 #
+    # (riga2 >= riga1 -1) && (riga2 <= riga1 +1) #
+    # (colonna2 >= colonna1 -1) && (colonna2 <= colonna1 +1) #

@@ -1,0 +1,11 @@
+Model posizionaPedina
+ Parameters:
+   mossa: [1 .. 5]
+   riga1: [1 .. 8]
+   colonna1: [1 .. 8]
+   tipologia: {A, D}
+
+ Constraints:
+    # mossa == 1 #
+    # colonna1 == 1 #
+    # tipologia == A or tipologia == D #
