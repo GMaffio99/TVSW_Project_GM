@@ -28,6 +28,14 @@
             <targetTests>
                 <param>mortal_chess_tests*</param>
             </targetTests>
+            <excludedClasses>
+            	<param>MortalChessMain</param>
+            </excludedClasses>
+            <excludedMethods>
+            	<param>print</param>
+            	<param>gioca</param>
+            </excludedMethods>
+            <avoidCallsTo>java.io.PrintStream</avoidCallsTo>
         </configuration>
       </plugin>
     </plugins>

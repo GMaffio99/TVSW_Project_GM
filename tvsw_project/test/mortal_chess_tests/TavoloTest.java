@@ -397,7 +397,7 @@ public class TavoloTest {
 
 	@Test
 	public void testPosizionaPedina() {
-		tavolo.getListaPedine().put(TavoloUtils.getIndex(1, 'H'), new Difensore('O', 1, 'H'));
+		tavolo.posizionaPedina('O', 'D', '1', 'H');
 		Pedina p = tavolo.getPedina('1', 'H');
 		assertEquals(p.getGiocatore(), 'O');
 		assertEquals(p.getRiga(), 1);
